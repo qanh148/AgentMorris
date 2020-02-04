@@ -16,6 +16,17 @@ var objects;
 (function (objects) {
     var Label = /** @class */ (function (_super) {
         __extends(Label, _super);
+        /**
+         *Creates an instance of Label.
+         * @param {string} text
+         * @param {string} fontSize
+         * @param {string} fontFamily
+         * @param {string} fontColor
+         * @param {number} x
+         * @param {number} y
+         * @param {boolean} isCentered
+         * @memberof Label
+         */
         function Label(text, fontSize, fontFamily, fontColor, x, y, isCentered) {
             var _this = _super.call(this, text, fontSize + " " + fontFamily, fontColor) || this;
             if (isCentered) {
@@ -30,4 +41,4 @@ var objects;
     }(createjs.Text));
     objects.Label = Label;
 })(objects || (objects = {}));
-//# sourceMappingURL=label.js.map
+//# sourceMappingURL=Label.js.map

@@ -1,5 +1,16 @@
 module objects {
     export class Label extends createjs.Text {
+        /**
+         *Creates an instance of Label.
+         * @param {string} text
+         * @param {string} fontSize
+         * @param {string} fontFamily
+         * @param {string} fontColor
+         * @param {number} x
+         * @param {number} y
+         * @param {boolean} isCentered
+         * @memberof Label
+         */
         constructor(text:string,
              fontSize:string, fontFamily:string, fontColor:string,
              x:number, y:number, isCentered:boolean) {
