@@ -45,20 +45,24 @@ function tick(event){
     switch(xKeyHeld){
       case "LEFT":
         Player.x -= 3;//player object's x value is subtracted by 3 every tick left is held
-          break;
+        createjs.Sound.play("footstep", {interrupt: createjs.Sound.INTERUPT_LATE});  
+            break;
       case "RIGHT":
     if(Player.x < npc.x - 85)
         Player.x += 3;//see above
-          break;
+        createjs.Sound.play("footstep", {interrupt: createjs.Sound.INTERUPT_LATE});
+            break;
   }
 
   switch(yKeyHeld){
       case "UP":
         Player.y -= 3;//same as above, using y values
-          break;
+        createjs.Sound.play("footstep", {interrupt: createjs.Sound.INTERUPT_LATE});
+            break;
       case "DOWN":
         Player.y += 3;//^^^
-          break;
+        createjs.Sound.play("footstep", {interrupt: createjs.Sound.INTERUPT_LATE});
+            break;
   }
 
 stage.update(event);
