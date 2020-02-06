@@ -46,6 +46,8 @@ let game = (function() {
         // mousePlayer();
         
         let sprite = new objects.PlayerSprite();
+        sprite.sprite.x = 50;
+        sprite.sprite.y = 50;
         stage.addChild(sprite.sprite);
     }
 
