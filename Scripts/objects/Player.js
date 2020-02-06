@@ -1,9 +1,11 @@
 "use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
+
+
+let __extends = (this && this.__extends) || (function () {
+    let extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (let p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -12,9 +14,9 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var objects;
+let objects;
 (function (objects) {
-    var Player = /** @class */ (function (_super) {
+    let Player = /** @class */ (function (_super) {
         __extends(Player, _super);
         function Player() {
             // super();
@@ -37,4 +39,36 @@ var objects;
     }(objects.GameObject));
     objects.Player = Player;
 })(objects || (objects = {}));
+
+function tick(event){
+  
+    switch(xKeyHeld){
+      case "LEFT":
+        Player.x -= 3;//player object's x value is subtracted by 3 every tick left is held
+          break;
+      case "RIGHT":
+    if(Player.x < npc.x - 85)
+        Player.x += 3;//see above
+          break;
+  }
+
+  switch(yKeyHeld){
+      case "UP":
+        Player.y -= 3;//same as above, using y values
+          break;
+      case "DOWN":
+        Player.y += 3;//^^^
+          break;
+  }
+
+stage.update(event);
+}
+
+    var KEYCODE_W = 87;	//js keycodes for wasd		
+	var KEYCODE_A = 65;	
+	var KEYCODE_D = 68;		
+    var KEYCODE_S = 83;
+    
+//Animations can fit here
+
 //# sourceMappingURL=Player.js.map
