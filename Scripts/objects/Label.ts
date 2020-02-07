@@ -13,7 +13,8 @@ module objects {
          */
         constructor(text:string,
              fontSize:string, fontFamily:string, fontColor:string,
-             x:number, y:number, isCentered:boolean) {
+             x:number, y:number,
+             public isCentered:boolean = false) {
             super(text, `${fontSize} ${fontFamily}`, fontColor);
             if (isCentered) {
                 this.regX = this.getBounds().width * 0.5;
@@ -24,3 +25,4 @@ module objects {
         }
     }
 }
+
