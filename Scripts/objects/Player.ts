@@ -13,7 +13,7 @@ module objects {
             // this.isCentered = true;
         }
         public update(): void {
-            this.position = new Vector2(this.stage.mouseX, this.stage.mouseY);
+            this.position = new Vector2(this._bitmap.stage.mouseX, this._bitmap.stage.mouseY);
         }
         public reset(): void {
             // throw new Error("Method not implemented.");

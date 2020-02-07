@@ -28,7 +28,7 @@ var objects;
             // this.isCentered = true;
         };
         Player.prototype.update = function () {
-            this.position = new objects.Vector2(this.stage.mouseX, this.stage.mouseY);
+            this.position = new objects.Vector2(this._bitmap.stage.mouseX, this._bitmap.stage.mouseY);
         };
         Player.prototype.reset = function () {
             // throw new Error("Method not implemented.");

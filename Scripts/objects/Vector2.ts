@@ -6,7 +6,7 @@ module objects {
         private _magnitude: number = 0;
         private _sqrMagnitude: number = 0;
 
-        // PUBLIC PROP
+        //#region PUBLIC PROP
 
         get x():number {
             return this._x;
@@ -45,6 +45,8 @@ module objects {
             vector2.normalize();
             return vector2;
         }
+
+        //#endregion
 
         // CONSTRUCTOR
 

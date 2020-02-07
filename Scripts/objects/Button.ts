@@ -3,17 +3,17 @@ module objects {
         constructor(imgPath:string, x:number=0, y:number=0, isCentered:boolean=true) {
             super(imgPath, x, y, isCentered);
 
-            this.on("mouseover", this.mouseover);
-            this.on("mouseout", this.mouseout);
+            this._bitmap.on("mouseover", this.mouseover);
+            this._bitmap.on("mouseout", this.mouseout);
         }
 
         // method
         mouseover():void {
-            this.alpha = 0.7;
+            this._bitmap.alpha = 0.7;
         }
 
         mouseout():void {
-            this.alpha = 1;
+            this._bitmap.alpha = 1;
         }
         
         // PROTECTED METHODS

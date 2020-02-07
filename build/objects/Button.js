@@ -21,16 +21,16 @@ var objects;
             if (y === void 0) { y = 0; }
             if (isCentered === void 0) { isCentered = true; }
             var _this = _super.call(this, imgPath, x, y, isCentered) || this;
-            _this.on("mouseover", _this.mouseover);
-            _this.on("mouseout", _this.mouseout);
+            _this._bitmap.on("mouseover", _this.mouseover);
+            _this._bitmap.on("mouseout", _this.mouseout);
             return _this;
         }
         // method
         Button.prototype.mouseover = function () {
-            this.alpha = 0.7;
+            this._bitmap.alpha = 0.7;
         };
         Button.prototype.mouseout = function () {
-            this.alpha = 1;
+            this._bitmap.alpha = 1;
         };
         // PROTECTED METHODS
         Button.prototype._checkBounds = function () {

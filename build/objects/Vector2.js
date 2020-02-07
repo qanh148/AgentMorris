@@ -2,6 +2,7 @@
 var objects;
 (function (objects) {
     var Vector2 = /** @class */ (function () {
+        //#endregion
         // CONSTRUCTOR
         function Vector2(x, y) {
             if (x === void 0) { x = 0; }
@@ -17,7 +18,7 @@ var objects;
             this.magnitude = Math.sqrt(this.sqrMagnitude);
         }
         Object.defineProperty(Vector2.prototype, "x", {
-            // PUBLIC PROP
+            //#region PUBLIC PROP
             get: function () {
                 return this._x;
             },
