@@ -4,14 +4,21 @@
   "description": "",
   "browser": "index.html",
   "scripts": {
-    "run": "tsc && lite-server"
+    "test": "tsc && lite-server"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AbbyNode/AgentMorris.git"
   },
   "author": "Chippers",
-  "contributors": ["Abby Shah", "Deng Zhonghua", "Alex Nguyen", "Akhil Sanjeev", "Caleb Morin", "Hanzel Torenco"],
+  "contributors": [
+    "Abby Shah",
+    "Deng Zhonghua",
+    "Alex Nguyen",
+    "Akhil Sanjeev",
+    "Caleb Morin",
+    "Hanzel Torenco"
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/AbbyNode/AgentMorris/issues"
@@ -29,6 +36,8 @@
     "@types/easeljs": "^1.0.0",
     "@types/preloadjs": "^0.6.32",
     "@types/soundjs": "^0.6.27",
-    "@types/tweenjs": "^1.0.0"
+    "@types/tweenjs": "^1.0.0",
+    "lite-server": "^2.5.4",
+    "typescript": "^3.7.5"
   }
 }
