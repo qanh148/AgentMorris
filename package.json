@@ -4,7 +4,7 @@
   "description": "",
   "browser": "index.html",
   "scripts": {
-    "run": "tsc && lite-server",
+    "run": "tsc && lite-server"
   },
   "repository": {
     "type": "git",
