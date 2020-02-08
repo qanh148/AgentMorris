@@ -4,7 +4,8 @@
   "description": "",
   "browser": "index.html",
   "scripts": {
-    "test": "tsc && lite-server"
+    "test": "tsc && lite-server",
+    "tsc": "tsc"
   },
   "repository": {
     "type": "git",
@@ -29,6 +30,7 @@
     "easeljs": "^1.0.2",
     "preloadjs": "^1.0.1",
     "soundjs": "^1.0.1",
+    "ts-key-enum": "^3.0.2",
     "tweenjs": "^1.0.2"
   },
   "devDependencies": {

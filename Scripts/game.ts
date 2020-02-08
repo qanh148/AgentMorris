@@ -1,5 +1,5 @@
-
-// IIFE -- Immediately invoked function expression
+import { Key } from "../node_modules/ts-key-enum/Key.enum";
+import { KeyboardInput } from "./objects/KeyboardInput.js";
 
 let game = (function() {
     let canvas:HTMLCanvasElement;
@@ -26,6 +26,12 @@ let game = (function() {
         sprite.sprite.x = 50;
         sprite.sprite.y = 50;
         stage.addChild(sprite.sprite);
+
+        let keyb = new KeyboardInput(Key.ArrowUp);
+
+        document.addEventListener("keydown", (event) => {
+            console.log(event);
+        });
     }
 
     window.addEventListener("load", start);
