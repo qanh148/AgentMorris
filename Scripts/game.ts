@@ -40,6 +40,11 @@ let game = (function() {
 
         playerController = new PlayerController(player);
         playerController.initWASD();
+
+        let playerCollider:Collider = new Collider("player");
+
+        // let otherCollider:Collider = new Collider("other");
+
     }
 
     window.addEventListener("load", start);
