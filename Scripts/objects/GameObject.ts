@@ -1,4 +1,4 @@
-import { Collider } from "./Collider.js";
+import { Collider, CollideCallback } from "./Collider.js";
 
 export enum MoveDirection {
     Up, Down, Left, Right
@@ -6,7 +6,6 @@ export enum MoveDirection {
 
 export abstract class GameObject {
     // Private
-    private _facingRight : boolean = true;
     private _moveSpeed : number = 5;
     private _movingX: number = 0;
     private _movingY: number = 0;
@@ -16,6 +15,8 @@ export abstract class GameObject {
     public collider:Collider;
 
     // Properties
+
+    private _facingRight : boolean = true;
     public get facingRight() : boolean {
         return this._facingRight;
     }

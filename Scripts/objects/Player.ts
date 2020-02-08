@@ -11,5 +11,11 @@ export class Player extends GameObject {
                 run: [2, 3, undefined, 0.4],
             }
         }, "player");
+
+        this.collider.callback = (collider) => {
+            if (collider.tag == "wall") {
+                console.log("hit wall");
+            }
+        };
     }
 }

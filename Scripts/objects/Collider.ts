@@ -1,6 +1,9 @@
+export type CollideCallback = (collider:Collider) => any;
+// https://stackoverflow.com/questions/14638990/are-strongly-typed-functions-as-parameters-possible-in-typescript
+
 export class Collider {
     //#region static vars
-    public static checksPerSecond = 30;
+    public static checksPerSecond = 4;
 
     private static colliders:Collider[];
     private static _initialized = false;
@@ -11,6 +14,7 @@ export class Collider {
     //#endregion
 
     //#region object vars
+
     private _tag : string = "";
     public get tag() : string {
         return this._tag;
@@ -19,12 +23,24 @@ export class Collider {
         this._tag = v;
     }
 
+    // TODO: Should have onEnter and onExit
+    
+    private _callback : CollideCallback = () => {};
+    public get callback() : CollideCallback {
+        return this._callback;
+    }
+    public set callback(v : CollideCallback) {
+        this._callback = v;
+    }
+    
+
     //#endregion
 
     //#region object functions
     
-    constructor(tag:string) {
+    constructor(tag:string, callback:CollideCallback = () => {}) {
         this.tag = tag;
+        this.callback = callback;
 
         Collider.colliders.push(this);
     }
@@ -60,7 +76,8 @@ export class Collider {
         Collider.colliders.forEach(collider1 => {
             Collider.colliders.forEach(collider2 => {
                 if (collider1 !== collider2) {
-                    console.log("checking");
+                    collider1.callback(collider2);
+                    collider2.callback(collider1);
                 }
             });
         });
