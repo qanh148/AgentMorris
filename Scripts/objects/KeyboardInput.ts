@@ -1,11 +1,40 @@
-
-import { Key } from "../../node_modules/ts-key-enum/Key.enum";
+export type KeyMap = {
+    up: ()=>any;
+    down: ()=>any;
+};
 
 export class KeyboardInput {
-    private _key:Key;
+    private _keyMap = new Map();
+    private _isDownMap = new Map();
+    
+    constructor() {
+        document.addEventListener("keydown", (event) => {
+            if (this._keyMap.has(event.key) // exists
+                && !this._isDownMap.get(event.key)) { // is not held
+                this._keyMap.get(event.key).down();
+                this._isDownMap.set(event.key, true);
+            }
+        });
+        document.addEventListener("keyup", (event) => {
+            if (this._keyMap.has(event.key)) {
+                this._keyMap.get(event.key).up();
+                this._isDownMap.set(event.key, false);
+            }
+        });
+    }
 
-    constructor(key:Key) {
-        this._key = key;
+    public addKey(key:string, keyMap:KeyMap):void {
+        if (this._keyMap.has(key)) {
+            console.log(`Key ${key} already in use`);
+        } else {
+            this._keyMap.set(key, keyMap);
+            this._isDownMap.set(key, false);
+        }
+    }
+
+    public removeKey(key:string):void {
+        this._keyMap.delete(key);
+        this._isDownMap.delete(key);
     }
 }
 

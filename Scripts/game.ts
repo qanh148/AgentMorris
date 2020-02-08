@@ -1,9 +1,12 @@
-import { Key } from "../node_modules/ts-key-enum/Key.enum";
-import { KeyboardInput } from "./objects/KeyboardInput.js";
+import { Player } from "./objects/Player.js";
+import { PlayerController } from "./objects/PlayerController.js";
 
 let game = (function() {
     let canvas:HTMLCanvasElement;
     let stage:createjs.Stage;
+
+    let player:Player;
+    let playerController:PlayerController;
 
     function start():void {
         canvas = document.getElementsByTagName('canvas')[0];
@@ -19,19 +22,18 @@ let game = (function() {
 
     function update():void {
         stage.update();
+
+        player.update();
     }
 
     function main():void {
-        let sprite = new objects.PlayerSprite();
-        sprite.sprite.x = 50;
-        sprite.sprite.y = 50;
-        stage.addChild(sprite.sprite);
+        player =  new Player();
 
-        let keyb = new KeyboardInput(Key.ArrowUp);
+        player.sprite.x = 100;
+        player.sprite.y = 100;
+        stage.addChild(player.sprite);
 
-        document.addEventListener("keydown", (event) => {
-            console.log(event);
-        });
+        playerController = new PlayerController(player);
     }
 
     window.addEventListener("load", start);
