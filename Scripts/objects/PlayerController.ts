@@ -9,7 +9,9 @@ export class PlayerController {
         this._player = player;
 
         this._keyboardInput = new KeyboardInput();
+    }
 
+    public initWASD():void {
         // TODO when customizing controls, save and reuse the generated keymaps
         this._keyboardInput.addKey("w", this.GenKeyMap(MoveDirection.Up));
         this._keyboardInput.addKey("s", this.GenKeyMap(MoveDirection.Down));

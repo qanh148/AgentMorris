@@ -1,5 +1,6 @@
 import { Player } from "./objects/Player.js";
 import { PlayerController } from "./objects/PlayerController.js";
+import { Collider } from "./objects/Collider.js";
 
 let game = (function() {
     let canvas:HTMLCanvasElement;
@@ -8,11 +9,13 @@ let game = (function() {
     let player:Player;
     let playerController:PlayerController;
 
+    // TODO: Use EaselJS EventDispatcher
+
     function start():void {
         canvas = document.getElementsByTagName('canvas')[0];
         stage = new createjs.Stage(canvas);
 
-        createjs.Ticker.framerate = 30; // fps
+        createjs.Ticker.framerate = 60; // fps
         createjs.Ticker.on('tick', update);
 
         // stage.enableMouseOver(20);
@@ -24,6 +27,8 @@ let game = (function() {
         stage.update();
 
         player.update();
+
+        Collider.update();
     }
 
     function main():void {
@@ -34,6 +39,7 @@ let game = (function() {
         stage.addChild(player.sprite);
 
         playerController = new PlayerController(player);
+        playerController.initWASD();
     }
 
     window.addEventListener("load", start);
