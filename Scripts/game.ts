@@ -1,6 +1,7 @@
 import { Player } from "./objects/Player.js";
 import { PlayerController } from "./objects/PlayerController.js";
 import { Collider } from "./objects/Collider.js";
+import { Wall } from "./objects/Wall.js";
 
 let game = (function() {
     let canvas:HTMLCanvasElement;
@@ -41,8 +42,12 @@ let game = (function() {
         playerController = new PlayerController(player);
         playerController.initWASD();
 
-        let playerCollider:Collider = new Collider("player");
+        let wall = new Wall();
+        wall.sprite.x = 200;
+        wall.sprite.y = 200;
+        stage.addChild(wall.sprite);
 
+        // let playerCollider:Collider = new Collider("player");
         // let otherCollider:Collider = new Collider("other");
 
     }
