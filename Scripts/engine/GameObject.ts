@@ -1,4 +1,4 @@
-import { Collider, CollideCallback } from "./Collider.js";
+import { Collider } from "./Collider.js";
 
 export enum MoveDirection {
     Up, Down, Left, Right
@@ -22,7 +22,6 @@ export abstract class GameObject {
     }
     public set facingRight(value : boolean) {
         this._facingRight = value;
-
         this.sprite.scaleX = (value ? 1 : -1);
     }
     
@@ -35,8 +34,6 @@ export abstract class GameObject {
 
         this.sprite.regX = 32;
         this.sprite.regY = 32;
-        
-        this.facingRight = false;
 
         this.collider = new Collider(colliderTag);
     }

@@ -1,4 +1,4 @@
-import { GameObject } from "./GameObject.js";
+import { GameObject } from "../engine/GameObject.js";
 
 export class Player extends GameObject {
     constructor() {
@@ -12,7 +12,7 @@ export class Player extends GameObject {
             }
         }, "player");
 
-        this.collider.callback = (collider) => {
+        this.collider.onCollisionEnter = (collider) => {
             if (collider.tag == "wall") {
                 console.log("hit wall");
             }

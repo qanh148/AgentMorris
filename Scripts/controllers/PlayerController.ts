@@ -1,5 +1,5 @@
-import { MoveDirection } from "./GameObject.js";
-import { Player } from "./Player.js";
+import { MoveDirection } from "../engine/GameObject.js";
+import { Player } from "../objects/Player.js";
 import { KeyboardInput, KeyMap } from "./KeyboardInput.js";
 
 export class PlayerController {

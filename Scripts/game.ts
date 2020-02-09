@@ -1,6 +1,6 @@
 import { Player } from "./objects/Player.js";
-import { PlayerController } from "./objects/PlayerController.js";
-import { Collider } from "./objects/Collider.js";
+import { PlayerController } from "./controllers/PlayerController.js";
+import { Collider } from "./engine/Collider.js";
 import { Wall } from "./objects/Wall.js";
 
 let game = (function() {
