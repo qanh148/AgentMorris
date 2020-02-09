@@ -1,3 +1,5 @@
+import { AABB } from "./AABB.js";
+
 export type CollisionCallback = (collider: Collider) => any;
 // https://stackoverflow.com/questions/14638990/are-strongly-typed-functions-as-parameters-possible-in-typescript
 
@@ -24,22 +26,9 @@ export class Collider {
 	public set tag(v: string) {
 		this._tag = v;
 	}
-
-	private _onCollisionEnter: CollisionCallback = Collider.defaultCallback;
-	public get onCollisionEnter(): CollisionCallback {
-		return this._onCollisionEnter;
-	}
-	public set onCollisionEnter(v: CollisionCallback) {
-		this._onCollisionEnter = v;
-	}
-
-	private _onCollisionExit: CollisionCallback = Collider.defaultCallback;
-	public get onCollisionExit(): CollisionCallback {
-		return this._onCollisionExit;
-	}
-	public set onCollisionExit(v: CollisionCallback) {
-		this._onCollisionExit = v;
-	}
+	
+	private _onCollisionEnter : CollisionCallback[] = [];
+	private _onCollisionExit : CollisionCallback[] = [];
 
 	//#endregion
 
@@ -81,9 +70,12 @@ export class Collider {
 	public static checkCollisions(): void {
 		Collider.colliders.forEach(collider1 => {
 			Collider.colliders.forEach(collider2 => {
-				if (collider1 !== collider2) {
+				if (collider1 !== collider2) { // All except self
+					let collision = Collider.AABB(collider1, collider2);
+					if (collision) {
 					// collider1.callback(collider2);
 					// collider2.callback(collider1);
+					}
 				}
 			});
 		});

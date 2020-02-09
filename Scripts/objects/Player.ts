@@ -1,6 +1,6 @@
-import { GameObject } from "../engine/GameObject.js";
+import { MovingGameObject } from "../engine/MovingGameObject.js";
 
-export class Player extends GameObject {
+export class Player extends MovingGameObject {
 	constructor() {
 		super({
 			images: ["./Assets/images/AgentMorris_SpriteSheet.png"],
@@ -12,10 +12,10 @@ export class Player extends GameObject {
 			}
 		}, "player");
 
-		this.collider.onCollisionEnter = (collider) => {
-			if (collider.tag == "wall") {
-				console.log("hit wall");
-			}
-		};
+		// this.collider.onCollisionEnter = (collider) => {
+		// 	if (collider.tag == "wall") {
+		// 		console.log("hit wall");
+		// 	}
+		// };
 	}
 }

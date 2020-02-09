@@ -1,6 +1,8 @@
-import { Point2D } from "./Point2D";
+import { Point2D } from "./Point2D.js";
 
 export class AABB {
+	public static debugView:boolean = false;
+
 	private _positionRelative: Point2D = new Point2D();
 	public get positionRelative(): Point2D {
 		return this._positionRelative;
@@ -25,11 +27,13 @@ export class AABB {
 		this._height = v;
 	}
 
-	constructor(position: Point2D = new Point2D(), width: number = 0, height: number = 0) {
-		this.positionRelative = position;
+	constructor(positionRelative: Point2D = new Point2D(), width: number = 0, height: number = 0) {
+		this.positionRelative = positionRelative;
 		this.width = width;
 		this.height = height;
 	}
+
+
 
 	// TODO: Make debug view for AABB
 	// var graphics = new createjs.Graphics().beginStroke("#ff0000").drawRect(0, 0, 100, 100);

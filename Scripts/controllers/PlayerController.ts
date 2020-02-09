@@ -1,6 +1,6 @@
-import { MoveDirection } from "../engine/GameObject.js";
 import { Player } from "../objects/Player.js";
 import { KeyboardInput, KeyMap } from "./KeyboardInput.js";
+import { MoveDirection } from "../engine/MovingGameObject.js";
 
 export class PlayerController {
 	private _player: Player;
@@ -8,12 +8,11 @@ export class PlayerController {
 
 	constructor(player: Player) {
 		this._player = player;
-
 		this._keyboardInput = new KeyboardInput();
 	}
 
 	public initWASD(): void {
-		// TODO when customizing controls, save and reuse the generated keymaps
+		// REMINDER when customizing controls, save and reuse the generated keymaps
 		this._keyboardInput.addKey("w", this.GenKeyMap(MoveDirection.Up));
 		this._keyboardInput.addKey("s", this.GenKeyMap(MoveDirection.Down));
 		this._keyboardInput.addKey("a", this.GenKeyMap(MoveDirection.Left));

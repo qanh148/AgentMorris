@@ -2,6 +2,7 @@ import { Player } from "./objects/Player.js";
 import { PlayerController } from "./controllers/PlayerController.js";
 import { Collider } from "./engine/Collider.js";
 import { Wall } from "./objects/Wall.js";
+import { AABB } from "./engine/AABB.js";
 
 let game = (function () {
 	let canvas: HTMLCanvasElement;
@@ -10,7 +11,9 @@ let game = (function () {
 	let player: Player;
 	let playerController: PlayerController;
 
-	// TODO: Use EaselJS EventDispatcher
+	// REMINDER: Use EaselJS EventDispatcher
+
+	// TODO: Make scenes
 
 	function start(): void {
 		canvas = document.getElementsByTagName('canvas')[0];
@@ -46,6 +49,8 @@ let game = (function () {
 		wall.sprite.x = 200;
 		wall.sprite.y = 200;
 		stage.addChild(wall.sprite);
+
+		AABB.debugView = true;
 
 		// let playerCollider:Collider = new Collider("player");
 		// let otherCollider:Collider = new Collider("other");
