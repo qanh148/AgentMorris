@@ -1,10 +1,13 @@
-import { AABB } from "./AABB.js";
+import { AABB } from "../interfaces/AABB.js";
+import { EventManager, Listener } from "./EventManager.js";
 
-export type CollisionCallback = (collider: Collider) => any;
 // https://stackoverflow.com/questions/14638990/are-strongly-typed-functions-as-parameters-possible-in-typescript
+export type CollisionCallback = (collider: Collider) => any;
 
 export class Collider {
 	//#region static vars
+
+	public static debugView:boolean = false;
 
 	private static colliders: Collider[];
 	private static _initialized = false;
@@ -13,13 +16,17 @@ export class Collider {
 	private static timePerCheck: number = 0; // milliseconds
 	private static timeAtLastCheck: number = 0;
 
-	private static defaultCallback: CollisionCallback = (collider: Collider) => { };
-
 	//#endregion
 
 	//#region object vars
 
-	private _tag: string = "";
+	private _tag: string;
+	private _aabb: AABB;
+
+	//#endregion
+
+	//#region Property getters/setters
+
 	public get tag(): string {
 		return this._tag;
 	}
@@ -27,37 +34,22 @@ export class Collider {
 		this._tag = v;
 	}
 
-	private _aabb: AABB = new AABB();
-
-	private _onCollisionEnter: CollisionCallback[] = [];
-	private _onCollisionExit: CollisionCallback[] = [];
-
 	//#endregion
 
 	//#region object functions
 
 	constructor(tag: string) {
-		this.tag = tag;
+		this._tag = tag;
+		this._aabb = {
+			position: {x:0, y:0},
+			width: 0,
+			height: 0
+		};
 
 		Collider.colliders.push(this);
 	}
 
 	// TODO: Use Event listener or something
-
-	// public addListenerEnter(callback:CollisionCallback) {
-	// 	this._onCollisionEnter.push(callback);
-	// }
-	// public removeListenerEnter(callback:CollisionCallback) {
-	// 	let index = this._onCollisionEnter.indexOf(callback);
-	// 	this._onCollisionEnter.splice(index, 1);
-	// }
-	// public addListenerExit(callback:CollisionCallback) {
-	// 	this._onCollisionEnter.push(callback);
-	// }
-	// public removeListenerExit(callback: CollisionCallback) {
-	// 	let index = this._onCollisionExit.indexOf(callback);
-	// 	this._onCollisionExit.splice(index, 1);
-	// }
 
 	public delete() {
 		let index = Collider.colliders.indexOf(this);
@@ -85,6 +77,10 @@ export class Collider {
 			Collider.timeAtLastCheck = timeNow;
 		}
 	}
+	
+	// TODO: Make debug view for AABB
+	// var graphics = new createjs.Graphics().beginStroke("#ff0000").drawRect(0, 0, 100, 100);
+	// var shape = new createjs.Shape(graphics);
 
 	public static checkCollisions(): void {
 		Collider.colliders.forEach(collider1 => {

@@ -1,17 +1,35 @@
-import { Collider } from "./Collider.js";
-import { Point2D } from "./Point2D.js";
+import { Collider } from "./components/Collider.js";
+import { EventManager } from "./components/EventManager.js";
+import { Point2D } from "./interfaces/Point2D.js";
+
+// https://stackoverflow.com/questions/50110844/what-is-the-difference-between-interface-and-abstract-class-in-typescript
+export interface GameComponent {
+	parent: GameObject;
+}
 
 export abstract class GameObject {
 	// Public
-	public sprite: createjs.Sprite;
-	public collider: Collider;
+	// public sprite: createjs.Sprite;
+	// public collider: Collider;
 
 	// TODO: Add AABB either here or in collider
 	// Probably in collider
+	
+	private _eventManager: EventManager;
+	private _position: Point2D;
+	private _sprite: createjs.Sprite;
+	private _facingRight: boolean;
+	private _collider : Collider;
 
-	// Properties
+	//#region Property getters/setters
 
-	private _position: Point2D = new Point2D();
+	public get eventManager(): EventManager {
+		return this._eventManager;
+	}
+	// public set eventManager(v : EventManager) {
+	// 	this._eventManager = v;
+	// }
+
 	public get position(): Point2D {
 		return this._position;
 	}
@@ -21,7 +39,13 @@ export abstract class GameObject {
 		this.sprite.y = v.y;
 	}
 
-	private _facingRight: boolean = true;
+	public get sprite(): createjs.Sprite {
+		return this._sprite;
+	}
+	// public set sprite(v: createjs.Sprite) {
+	// 	this._sprite = v;
+	// }
+
 	public get facingRight(): boolean {
 		return this._facingRight;
 	}
@@ -30,17 +54,31 @@ export abstract class GameObject {
 		this.sprite.scaleX = (value ? 1 : -1);
 	}
 
+	public get collider() : Collider {
+		return this._collider;
+	}
+	public set collider(v : Collider) {
+		this._collider = v;
+	}
+
+	//#endregion
+
 	constructor(spriteSheetData: Object, colliderTag: string) {
+		this._eventManager = new EventManager();
+
+		this._position = {x:0, y:0};
+		
 		// https://www.createjs.com/docs/easeljs/classes/SpriteSheet.html
 		let spriteSheet = new createjs.SpriteSheet(spriteSheetData);
+		this._sprite = new createjs.Sprite(spriteSheet);
 
-		this.sprite = new createjs.Sprite(spriteSheet);
+		this._facingRight = true;
+		this._collider = new Collider(colliderTag);
+
 		this.sprite.gotoAndPlay("idle");
 
 		this.sprite.regX = 32;
 		this.sprite.regY = 32;
-
-		this.collider = new Collider(colliderTag);
 	}
 
 }

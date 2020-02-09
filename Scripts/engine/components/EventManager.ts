@@ -1,13 +1,6 @@
-/**
- * Abstract class to create event listeners
- *
- * @export
- * @abstract
- * @class Listener
- */
-export abstract class Listener {
-	public abstract invoke(): void;
-}
+// Type instead of an interface
+// Previously tried interface instead of an abstract class
+export type Listener = () => any;
 
 /**
  * An event class used within the event manager
@@ -33,7 +26,7 @@ export class Event {
 
 	public invoke() {
 		this._listeners.forEach(listener => {
-			listener.invoke();
+			listener();
 		});
 	}
 }
