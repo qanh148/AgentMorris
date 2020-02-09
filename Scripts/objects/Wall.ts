@@ -9,5 +9,7 @@ export class Wall extends GameObject {
 				idle: 0
 			}
 		}, "wall");
+		
+		this.sprite.gotoAndPlay("idle");
 	}
 }

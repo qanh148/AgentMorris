@@ -10,6 +10,21 @@ export class MovingGameObject extends GameObject {
 	private _movingX: number = 0;
 	private _movingY: number = 0;
 
+	constructor(spriteSheetData: Object, colliderTag: string) {
+		super(spriteSheetData, colliderTag);
+
+		this.eventManager.addListener("moveStart", moveDirection => {
+			this.moveStart(moveDirection);
+		});
+		this.eventManager.addListener("moveStop", moveDirection => {
+			this.moveStop(moveDirection);
+		});
+
+		this.eventManager.addListener("collisionEnter", otherCollider => {
+			console.log(otherCollider);
+		});
+	}
+
 	public moveStart(moveDirection: MoveDirection) {
 		switch (moveDirection) {
 			case MoveDirection.Up:

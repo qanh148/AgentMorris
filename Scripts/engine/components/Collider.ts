@@ -10,7 +10,7 @@ export type CollisionCallback = (collider: Collider) => any;
 export class Collider extends GameComponent {
 	//#region static vars
 
-	public static debugView:boolean = false;
+	public static debugView: boolean = false;
 
 	private static colliders: Collider[];
 	private static _initialized = false;
@@ -25,6 +25,7 @@ export class Collider extends GameComponent {
 
 	private _tag: string;
 	private _aabb: AABB;
+	private _currentColliders: Collider[];
 
 	//#endregion
 
@@ -41,25 +42,40 @@ export class Collider extends GameComponent {
 		return this._aabb;
 	}
 
+	public get currentColliders(): Collider[] {
+		return this._currentColliders;
+	}
+	public set currentColliders(v: Collider[]) {
+		this._currentColliders = v;
+	}
+
 	//#endregion
 
 	//#region object functions
 
-	constructor(parent:GameObject, tag: string) {
+	constructor(parent: GameObject, tag: string) {
 		super(parent);
-		
+
 		this._tag = tag;
+
 		this._aabb = {
-			position: {x:0, y:0},
+			position: { x: 0, y: 0 },
+			offset: { x: 0, y: 0 },
 			width: 0,
 			height: 0
 		};
 
+		this._currentColliders = [];
+
 		Collider.colliders.push(this);
 
 		if (this.parent instanceof MovingGameObject) {
-			this.parent.eventManager.addListener("moved", ()=> {
-				console.log("Collision check on move");
+			this.parent.eventManager.addListener("moved", () => {
+				this.aabb.position = this.parent.position;
+				this.aabb.position.x += this.aabb.offset.x;
+				this.aabb.position.y += this.aabb.offset.y;
+
+				this.checkCollision();
 			});
 		}
 	}
@@ -81,36 +97,45 @@ export class Collider extends GameComponent {
 		}
 	}
 
-	// public static update(): void {
-	// 	let timeNow = createjs.Ticker.getTime();
-	// 	let timeDiff = timeNow - Collider.timeAtLastCheck;
-
-	// 	if (timeDiff >= Collider.timePerCheck) {
-	// 		this.checkCollisions();
-	// 		Collider.timeAtLastCheck = timeNow;
-	// 	}
-	// }
-	
 	// TODO: Make debug view for AABB
 	// var graphics = new createjs.Graphics().beginStroke("#ff0000").drawRect(0, 0, 100, 100);
 	// var shape = new createjs.Shape(graphics);
 
-	// public static checkCollisions(): void {
-	// 	Collider.colliders.forEach(collider1 => {
-	// 		Collider.colliders.forEach(collider2 => {
-	// 			if (collider1 !== collider2) { // All except self
-	// 				let collision = Collider.AABB(collider1, collider2);
-	// 				if (collision) {
-	// 					// collider1.callback(collider2);
-	// 					// collider2.callback(collider1);
-	// 				}
-	// 			}
-	// 		});
-	// 	});
-	// }
+	public checkCollision(): void {
+		Collider.colliders.forEach(otherCollider => { // For all colliders
+			if (this !== otherCollider) { // If not self
+				// Check if exists in currentColliders
+				let index = this.currentColliders.indexOf(otherCollider);
+				let otherColliderWasColliding = (index != -1);
+
+				if (Collider.AABB(this, otherCollider)) { // Has collision
+					if (!otherColliderWasColliding) { // Wasn't colliding before
+						// Send collision enter events
+						this.parent.eventManager.invoke("collisionEnter", otherCollider);
+						otherCollider.parent.eventManager.invoke("collisionEnter", this);
+
+						// Save to arrays
+						this.currentColliders.push(otherCollider);
+						otherCollider.currentColliders.push(this);
+					}
+				} else { // No collision
+					if (otherColliderWasColliding) { // Was colliding before
+						// Send collision exut events
+						this.parent.eventManager.invoke("collisionExit", otherCollider);
+						otherCollider.parent.eventManager.invoke("collisionExit", this);
+
+						// Remove from arrays
+						this.currentColliders.splice(index, 1);
+						let otherIndex = otherCollider.currentColliders.indexOf(this);
+						otherCollider.currentColliders.splice(otherIndex, 1);
+					}
+				}
+			}
+		});
+	}
 
 	public static AABB(collider1: Collider, collider2: Collider): boolean {
-		return false;
+		return true;
 	}
 
 	//#endregion

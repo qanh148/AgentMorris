@@ -3,10 +3,6 @@ import { EventManager } from "./components/EventManager.js";
 import { Point2D } from "./interfaces/Point2D.js";
 
 export abstract class GameObject {
-	// Public
-	// public sprite: createjs.Sprite;
-	// public collider: Collider;
-	
 	private _eventManager: EventManager;
 	private _position: Point2D;
 	private _sprite: createjs.Sprite;
@@ -66,8 +62,6 @@ export abstract class GameObject {
 
 		this._facingRight = true;
 		this._collider = new Collider(this, colliderTag);
-
-		this.sprite.gotoAndPlay("idle");
 
 		this.sprite.regX = 32;
 		this.sprite.regY = 32;

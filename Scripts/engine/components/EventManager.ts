@@ -3,7 +3,7 @@ import { GameComponent } from "../GameComponent.js";
 
 // Type instead of an interface
 // Previously tried interface instead of an abstract class
-export type Listener = () => any;
+export type Listener = (data: any) => any;
 
 /**
  * An event class used within the event manager
@@ -27,9 +27,9 @@ export class Event {
 		this._listeners.splice(index, 1);
 	}
 
-	public invoke() {
+	public invoke(data: any) {
 		this._listeners.forEach(listener => {
-			listener();
+			listener(data);
 		});
 	}
 }
@@ -43,7 +43,7 @@ export class Event {
 export class EventManager extends GameComponent {
 	private _events: Map<string, Event>;
 
-	constructor(parent:GameObject) {
+	constructor(parent: GameObject) {
 		super(parent);
 		this._events = new Map();
 	}
@@ -65,10 +65,10 @@ export class EventManager extends GameComponent {
 		}
 	}
 
-	public invoke(name: string) {
+	public invoke(name: string, data: any = {}) {
 		let event = this._events.get(name)
 		if (event != undefined) {
-			event.invoke();
+			event.invoke(data);
 		}
 	}
 }

@@ -11,6 +11,9 @@ export class Player extends MovingGameObject {
 				run: [2, 3, undefined, 0.4],
 			}
 		}, "player");
+		
+
+		this.sprite.gotoAndPlay("idle");
 
 		// this.collider.onCollisionEnter = (collider) => {
 		// 	if (collider.tag == "wall") {
