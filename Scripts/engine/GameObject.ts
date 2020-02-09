@@ -1,4 +1,5 @@
 import { Collider } from "./Collider.js";
+import { Point2D } from "./Point2D.js";
 
 export enum MoveDirection {
     Up, Down, Left, Right
@@ -14,8 +15,21 @@ export abstract class GameObject {
     public sprite:createjs.Sprite;
     public collider:Collider;
 
-    // Properties
+    // TODO: Add AABB either here or in collider
+    // Probably in collider
 
+    // Properties
+    
+    private _position : Point2D = new Point2D();
+    public get position() : Point2D {
+        return this._position;
+    }
+    public set position(v : Point2D) {
+        this._position = v;
+        this.sprite.x = v.x;
+        this.sprite.y = v.y;
+    }
+    
     private _facingRight : boolean = true;
     public get facingRight() : boolean {
         return this._facingRight;

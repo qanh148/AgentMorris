@@ -14,4 +14,9 @@ export class Point2D {
 	public set y(v: number) {
 		this._y = v;
 	}
+
+	constructor(x:number=0, y:number=0) {
+		this.x = x;
+		this.y = y;
+	}
 }

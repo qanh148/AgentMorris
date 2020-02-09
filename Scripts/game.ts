@@ -46,7 +46,7 @@ let game = (function() {
         wall.sprite.x = 200;
         wall.sprite.y = 200;
         stage.addChild(wall.sprite);
-
+       
         // let playerCollider:Collider = new Collider("player");
         // let otherCollider:Collider = new Collider("other");
 
