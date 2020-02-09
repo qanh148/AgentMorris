@@ -26,9 +26,11 @@ export class Collider {
 	public set tag(v: string) {
 		this._tag = v;
 	}
-	
-	private _onCollisionEnter : CollisionCallback[] = [];
-	private _onCollisionExit : CollisionCallback[] = [];
+
+	private _aabb: AABB = new AABB();
+
+	private _onCollisionEnter: CollisionCallback[] = [];
+	private _onCollisionExit: CollisionCallback[] = [];
 
 	//#endregion
 
@@ -39,6 +41,23 @@ export class Collider {
 
 		Collider.colliders.push(this);
 	}
+
+	// TODO: Use Event listener or something
+
+	// public addListenerEnter(callback:CollisionCallback) {
+	// 	this._onCollisionEnter.push(callback);
+	// }
+	// public removeListenerEnter(callback:CollisionCallback) {
+	// 	let index = this._onCollisionEnter.indexOf(callback);
+	// 	this._onCollisionEnter.splice(index, 1);
+	// }
+	// public addListenerExit(callback:CollisionCallback) {
+	// 	this._onCollisionEnter.push(callback);
+	// }
+	// public removeListenerExit(callback: CollisionCallback) {
+	// 	let index = this._onCollisionExit.indexOf(callback);
+	// 	this._onCollisionExit.splice(index, 1);
+	// }
 
 	public delete() {
 		let index = Collider.colliders.indexOf(this);
@@ -73,8 +92,8 @@ export class Collider {
 				if (collider1 !== collider2) { // All except self
 					let collision = Collider.AABB(collider1, collider2);
 					if (collision) {
-					// collider1.callback(collider2);
-					// collider2.callback(collider1);
+						// collider1.callback(collider2);
+						// collider2.callback(collider1);
 					}
 				}
 			});
