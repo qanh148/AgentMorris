@@ -1,3 +1,6 @@
+import { GameObject } from "../GameObject.js";
+import { GameComponent } from "../GameComponent.js";
+
 // Type instead of an interface
 // Previously tried interface instead of an abstract class
 export type Listener = () => any;
@@ -37,10 +40,11 @@ export class Event {
  * @export
  * @class EventManager
  */
-export class EventManager {
+export class EventManager extends GameComponent {
 	private _events: Map<string, Event>;
 
-	constructor() {
+	constructor(parent:GameObject) {
+		super(parent);
 		this._events = new Map();
 	}
 

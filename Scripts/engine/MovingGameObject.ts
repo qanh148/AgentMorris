@@ -10,7 +10,6 @@ export class MovingGameObject extends GameObject {
 	private _movingX: number = 0;
 	private _movingY: number = 0;
 
-
 	public moveStart(moveDirection: MoveDirection) {
 		switch (moveDirection) {
 			case MoveDirection.Up:
@@ -58,9 +57,11 @@ export class MovingGameObject extends GameObject {
 	public update() {
 		if (this._movingX != 0) {
 			this.sprite.x += this._movingX;
+			this.eventManager.invoke("moved");
 		}
 		if (this._movingY != 0) {
 			this.sprite.y += this._movingY;
+			this.eventManager.invoke("moved");
 		}
 	}
 }

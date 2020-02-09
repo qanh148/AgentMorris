@@ -1,10 +1,13 @@
 import { AABB } from "../interfaces/AABB.js";
 import { EventManager, Listener } from "./EventManager.js";
+import { GameObject } from "../GameObject.js";
+import { GameComponent } from "../GameComponent.js";
+import { MovingGameObject } from "../MovingGameObject.js";
 
 // https://stackoverflow.com/questions/14638990/are-strongly-typed-functions-as-parameters-possible-in-typescript
 export type CollisionCallback = (collider: Collider) => any;
 
-export class Collider {
+export class Collider extends GameComponent {
 	//#region static vars
 
 	public static debugView:boolean = false;
@@ -12,9 +15,9 @@ export class Collider {
 	private static colliders: Collider[];
 	private static _initialized = false;
 
-	private static checksPerSecond = 4;
-	private static timePerCheck: number = 0; // milliseconds
-	private static timeAtLastCheck: number = 0;
+	// private static checksPerSecond = 4;
+	// private static timePerCheck: number = 0; // milliseconds
+	// private static timeAtLastCheck: number = 0;
 
 	//#endregion
 
@@ -34,11 +37,17 @@ export class Collider {
 		this._tag = v;
 	}
 
+	public get aabb(): AABB {
+		return this._aabb;
+	}
+
 	//#endregion
 
 	//#region object functions
 
-	constructor(tag: string) {
+	constructor(parent:GameObject, tag: string) {
+		super(parent);
+		
 		this._tag = tag;
 		this._aabb = {
 			position: {x:0, y:0},
@@ -47,9 +56,13 @@ export class Collider {
 		};
 
 		Collider.colliders.push(this);
-	}
 
-	// TODO: Use Event listener or something
+		if (this.parent instanceof MovingGameObject) {
+			this.parent.eventManager.addListener("moved", ()=> {
+				console.log("Collision check on move");
+			});
+		}
+	}
 
 	public delete() {
 		let index = Collider.colliders.indexOf(this);
@@ -63,38 +76,38 @@ export class Collider {
 	public static initialize(): void {
 		if (!this._initialized) {
 			Collider.colliders = [];
-			Collider.timePerCheck = 1000 / Collider.checksPerSecond;
+			// Collider.timePerCheck = 1000 / Collider.checksPerSecond;
 			this._initialized = true;
 		}
 	}
 
-	public static update(): void {
-		let timeNow = createjs.Ticker.getTime();
-		let timeDiff = timeNow - Collider.timeAtLastCheck;
+	// public static update(): void {
+	// 	let timeNow = createjs.Ticker.getTime();
+	// 	let timeDiff = timeNow - Collider.timeAtLastCheck;
 
-		if (timeDiff >= Collider.timePerCheck) {
-			this.checkCollisions();
-			Collider.timeAtLastCheck = timeNow;
-		}
-	}
+	// 	if (timeDiff >= Collider.timePerCheck) {
+	// 		this.checkCollisions();
+	// 		Collider.timeAtLastCheck = timeNow;
+	// 	}
+	// }
 	
 	// TODO: Make debug view for AABB
 	// var graphics = new createjs.Graphics().beginStroke("#ff0000").drawRect(0, 0, 100, 100);
 	// var shape = new createjs.Shape(graphics);
 
-	public static checkCollisions(): void {
-		Collider.colliders.forEach(collider1 => {
-			Collider.colliders.forEach(collider2 => {
-				if (collider1 !== collider2) { // All except self
-					let collision = Collider.AABB(collider1, collider2);
-					if (collision) {
-						// collider1.callback(collider2);
-						// collider2.callback(collider1);
-					}
-				}
-			});
-		});
-	}
+	// public static checkCollisions(): void {
+	// 	Collider.colliders.forEach(collider1 => {
+	// 		Collider.colliders.forEach(collider2 => {
+	// 			if (collider1 !== collider2) { // All except self
+	// 				let collision = Collider.AABB(collider1, collider2);
+	// 				if (collision) {
+	// 					// collider1.callback(collider2);
+	// 					// collider2.callback(collider1);
+	// 				}
+	// 			}
+	// 		});
+	// 	});
+	// }
 
 	public static AABB(collider1: Collider, collider2: Collider): boolean {
 		return false;

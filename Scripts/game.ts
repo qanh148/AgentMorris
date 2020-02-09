@@ -31,8 +31,6 @@ let game = (function () {
 		stage.update();
 
 		player.update();
-
-		Collider.update();
 	}
 
 	function main(): void {

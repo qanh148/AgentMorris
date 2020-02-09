@@ -2,18 +2,10 @@ import { Collider } from "./components/Collider.js";
 import { EventManager } from "./components/EventManager.js";
 import { Point2D } from "./interfaces/Point2D.js";
 
-// https://stackoverflow.com/questions/50110844/what-is-the-difference-between-interface-and-abstract-class-in-typescript
-export interface GameComponent {
-	parent: GameObject;
-}
-
 export abstract class GameObject {
 	// Public
 	// public sprite: createjs.Sprite;
 	// public collider: Collider;
-
-	// TODO: Add AABB either here or in collider
-	// Probably in collider
 	
 	private _eventManager: EventManager;
 	private _position: Point2D;
@@ -64,7 +56,7 @@ export abstract class GameObject {
 	//#endregion
 
 	constructor(spriteSheetData: Object, colliderTag: string) {
-		this._eventManager = new EventManager();
+		this._eventManager = new EventManager(this);
 
 		this._position = {x:0, y:0};
 		
@@ -73,12 +65,11 @@ export abstract class GameObject {
 		this._sprite = new createjs.Sprite(spriteSheet);
 
 		this._facingRight = true;
-		this._collider = new Collider(colliderTag);
+		this._collider = new Collider(this, colliderTag);
 
 		this.sprite.gotoAndPlay("idle");
 
 		this.sprite.regX = 32;
 		this.sprite.regY = 32;
 	}
-
 }
