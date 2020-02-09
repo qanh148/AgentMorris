@@ -1,99 +1,99 @@
-export type CollisionCallback = (collider:Collider) => any;
+export type CollisionCallback = (collider: Collider) => any;
 // https://stackoverflow.com/questions/14638990/are-strongly-typed-functions-as-parameters-possible-in-typescript
 
 export class Collider {
-    //#region static vars
+	//#region static vars
 
-    private static colliders:Collider[];
-    private static _initialized = false;
+	private static colliders: Collider[];
+	private static _initialized = false;
 
-    private static checksPerSecond = 4;
-    private static timePerCheck:number = 0; // milliseconds
-    private static timeAtLastCheck:number = 0;
+	private static checksPerSecond = 4;
+	private static timePerCheck: number = 0; // milliseconds
+	private static timeAtLastCheck: number = 0;
 
-    private static defaultCallback:CollisionCallback = (collider:Collider) => {};
+	private static defaultCallback: CollisionCallback = (collider: Collider) => { };
 
-    //#endregion
+	//#endregion
 
-    //#region object vars
+	//#region object vars
 
-    private _tag : string = "";
-    public get tag() : string {
-        return this._tag;
-    }
-    public set tag(v : string) {
-        this._tag = v;
-    }
-    
-    private _onCollisionEnter : CollisionCallback = Collider.defaultCallback;
-    public get onCollisionEnter() : CollisionCallback {
-        return this._onCollisionEnter;
-    }
-    public set onCollisionEnter(v : CollisionCallback) {
-        this._onCollisionEnter = v;
-    }
+	private _tag: string = "";
+	public get tag(): string {
+		return this._tag;
+	}
+	public set tag(v: string) {
+		this._tag = v;
+	}
 
-    private _onCollisionExit : CollisionCallback = Collider.defaultCallback;
-    public get onCollisionExit() : CollisionCallback {
-        return this._onCollisionExit;
-    }
-    public set onCollisionExit(v : CollisionCallback) {
-        this._onCollisionExit = v;
-    }
+	private _onCollisionEnter: CollisionCallback = Collider.defaultCallback;
+	public get onCollisionEnter(): CollisionCallback {
+		return this._onCollisionEnter;
+	}
+	public set onCollisionEnter(v: CollisionCallback) {
+		this._onCollisionEnter = v;
+	}
 
-    //#endregion
+	private _onCollisionExit: CollisionCallback = Collider.defaultCallback;
+	public get onCollisionExit(): CollisionCallback {
+		return this._onCollisionExit;
+	}
+	public set onCollisionExit(v: CollisionCallback) {
+		this._onCollisionExit = v;
+	}
 
-    //#region object functions
-    
-    constructor(tag:string) {
-        this.tag = tag;
-        
-        Collider.colliders.push(this);
-    }
+	//#endregion
 
-    public delete() {
-        let index = Collider.colliders.indexOf(this);
-        Collider.colliders.splice(index, 1);
-    }
+	//#region object functions
 
-    //#endregion
+	constructor(tag: string) {
+		this.tag = tag;
 
-    //#region static functions
+		Collider.colliders.push(this);
+	}
 
-    public static initialize():void {
-        if (!this._initialized) {
-            Collider.colliders = [];
-            Collider.timePerCheck = 1000/Collider.checksPerSecond;
-            this._initialized = true;
-        }
-    }
+	public delete() {
+		let index = Collider.colliders.indexOf(this);
+		Collider.colliders.splice(index, 1);
+	}
 
-    public static update():void {
-        let timeNow = createjs.Ticker.getTime();
-        let timeDiff = timeNow - Collider.timeAtLastCheck;
+	//#endregion
 
-        if (timeDiff >= Collider.timePerCheck) {
-            this.checkCollisions();
-            Collider.timeAtLastCheck = timeNow;
-        }
-    }
+	//#region static functions
 
-    public static checkCollisions():void {
-        Collider.colliders.forEach(collider1 => {
-            Collider.colliders.forEach(collider2 => {
-                if (collider1 !== collider2) {
-                    // collider1.callback(collider2);
-                    // collider2.callback(collider1);
-                }
-            });
-        });
-    }
+	public static initialize(): void {
+		if (!this._initialized) {
+			Collider.colliders = [];
+			Collider.timePerCheck = 1000 / Collider.checksPerSecond;
+			this._initialized = true;
+		}
+	}
 
-    public static AABB(collider1:Collider, collider2:Collider):boolean {
-        return false;
-    }
+	public static update(): void {
+		let timeNow = createjs.Ticker.getTime();
+		let timeDiff = timeNow - Collider.timeAtLastCheck;
 
-    //#endregion
+		if (timeDiff >= Collider.timePerCheck) {
+			this.checkCollisions();
+			Collider.timeAtLastCheck = timeNow;
+		}
+	}
+
+	public static checkCollisions(): void {
+		Collider.colliders.forEach(collider1 => {
+			Collider.colliders.forEach(collider2 => {
+				if (collider1 !== collider2) {
+					// collider1.callback(collider2);
+					// collider2.callback(collider1);
+				}
+			});
+		});
+	}
+
+	public static AABB(collider1: Collider, collider2: Collider): boolean {
+		return false;
+	}
+
+	//#endregion
 }
 
 Collider.initialize();
