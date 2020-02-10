@@ -1,4 +1,4 @@
-import { Collider } from "./components/Collider.js";
+import { Collider, ColliderData } from "./components/Collider.js";
 import { EventManager } from "./components/EventManager.js";
 import { Point2D } from "./interfaces/Point2D.js";
 
@@ -43,7 +43,7 @@ export abstract class GameObject {
 
 	//#endregion
 
-	constructor(spriteSheetData: Object, colliderTag: string) {
+	constructor(spriteSheetData: Object, colliderData: ColliderData) {
 		this._eventManager = new EventManager(this);
 
 		this._position = {x:0, y:0};
@@ -53,7 +53,7 @@ export abstract class GameObject {
 		this._sprite = new createjs.Sprite(spriteSheet);
 
 		this._facingRight = true;
-		this._collider = new Collider(this, colliderTag);
+		this._collider = new Collider(this, colliderData);
 
 		this.sprite.regX = 32;
 		this.sprite.regY = 32;

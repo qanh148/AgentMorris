@@ -1,5 +1,4 @@
 import { AABB } from "../interfaces/AABB.js";
-import { EventManager, Listener } from "./EventManager.js";
 import { GameObject } from "../GameObject.js";
 import { GameComponent } from "../GameComponent.js";
 import { MovingGameObject } from "../MovingGameObject.js";
@@ -8,10 +7,17 @@ import { Point2D } from "../interfaces/Point2D.js";
 // https://stackoverflow.com/questions/14638990/are-strongly-typed-functions-as-parameters-possible-in-typescript
 export type CollisionCallback = (collider: Collider) => any;
 
+export interface ColliderData {
+	tag: string;
+	width: number;
+	height: number;
+	offset: Point2D;
+}
+
 export class Collider extends GameComponent {
 	//#region static vars
 
-	public static debugView: boolean = false;
+	private static debugView: boolean = false;
 
 	private static colliders: Collider[];
 	private static _initialized = false;
@@ -25,9 +31,12 @@ export class Collider extends GameComponent {
 	//#region object vars
 
 	private _tag: string;
+	
 	private _aabb: AABB;
 	private _aabbOffset: Point2D;
 	private _currentColliders: Collider[];
+
+	private _debugShape: createjs.Shape;
 
 	//#endregion
 
@@ -40,10 +49,6 @@ export class Collider extends GameComponent {
 		this._tag = v;
 	}
 
-	public get aabb(): AABB {
-		return this._aabb;
-	}
-
 	public get currentColliders(): Collider[] {
 		return this._currentColliders;
 	}
@@ -52,18 +57,18 @@ export class Collider extends GameComponent {
 
 	//#region object functions
 
-	constructor(parent: GameObject, tag: string) {
+	constructor(parent: GameObject, data: ColliderData) {
 		super(parent);
 
-		this._tag = tag;
+		this._tag = data.tag;
 
 		this._aabb = {
 			position: { x: 0, y: 0 },
-			width: 0,
-			height: 0
+			width: data.width,
+			height: data.height
 		};
 
-		this._aabbOffset = { x: 0, y: 0 };
+		this._aabbOffset = Object.assign({}, data.offset);
 
 		this._currentColliders = [];
 
@@ -72,6 +77,7 @@ export class Collider extends GameComponent {
 		// TODO: Don't need to check collision every time you move,
 		// Rather, turn on a bool to check collision IF there was movement
 		// That check should be in a time based loop
+		// UPDATE: Nah, go with predicted next step model
 
 		if (this.parent instanceof MovingGameObject) {
 			this.parent.eventManager.addListener("moved", () => {
@@ -79,18 +85,16 @@ export class Collider extends GameComponent {
 				this.checkCollision();
 			});
 		}
-	}
 
-	public setOffset(offset: Point2D) {
-		this._aabbOffset = Object.assign({}, offset);
-		this.setPosition(this.aabb.position);
+		let graphics = new createjs.Graphics().beginFill("#ff0000").drawRect(0, 0, 100, 100);
+		this._debugShape = new createjs.Shape(graphics);
 	}
 
 	public setPosition(position: Point2D) {
-		this.aabb.position = Object.assign({}, position);
+		this._aabb.position = Object.assign({}, position);
 		
-		this.aabb.position.x += this._aabbOffset.x;
-		this.aabb.position.y += this._aabbOffset.y;
+		this._aabb.position.x += this._aabbOffset.x;
+		this._aabb.position.y += this._aabbOffset.y;
 	}
 
 	public delete() {
@@ -121,7 +125,7 @@ export class Collider extends GameComponent {
 				let index = this.currentColliders.indexOf(otherCollider);
 				let otherColliderWasColliding = (index != -1);
 
-				if (Collider.AABB(this.aabb, otherCollider.aabb)) { // Has collision
+				if (Collider.AABB(this._aabb, otherCollider._aabb)) { // Has collision
 					if (!otherColliderWasColliding) { // Wasn't colliding before
 						// Send collision enter events
 						this.parent.eventManager.invoke("collisionEnter", otherCollider);
@@ -160,6 +164,12 @@ export class Collider extends GameComponent {
 		} else {
 			return false;
 		}
+	}
+	
+	public static toggleDebugView(toggle:boolean) {
+		this.debugView = toggle;
+		
+		this.colliders.forEach
 	}
 
 	//#endregion

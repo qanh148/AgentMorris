@@ -1,11 +1,12 @@
 import { GameObject } from "./GameObject.js";
 import { Point2D } from "./interfaces/Point2D.js";
-import { Collider } from "./components/Collider.js";
+import { Collider, ColliderData } from "./components/Collider.js";
 
 export enum MoveDirection {
 	Up, Down, Left, Right
 }
 
+// BUG: Why is GameObject not defined?
 export class MovingGameObject extends GameObject {
 	// Private
 	private _moveSpeed: number = 5;
@@ -15,8 +16,8 @@ export class MovingGameObject extends GameObject {
 	private _collided: boolean = false;
 	private _lastUncollidedPos: Point2D = { x: 0, y: 0 };
 
-	constructor(spriteSheetData: Object, colliderTag: string) {
-		super(spriteSheetData, colliderTag);
+	constructor(spriteSheetData: Object, colliderData: ColliderData) {
+		super(spriteSheetData, colliderData);
 
 		this.eventManager.addListener("moveStart", moveDirection => {
 			this.moveStart(moveDirection);
