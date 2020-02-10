@@ -104,6 +104,8 @@ export class MovingGameObject extends GameObject {
 		if (this._movingY != 0) {
 			newPos.y += this._movingY;
 		}
+
+		// TODO: Check collision before actually moving to avoid moving twice
 		
 		// Set new pos, which also sets collision etc
 		this.position = newPos;

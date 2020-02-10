@@ -26,6 +26,7 @@ export class Collider extends GameComponent {
 
 	private _tag: string;
 	private _aabb: AABB;
+	private _aabbOffset: Point2D;
 	private _currentColliders: Collider[];
 
 	//#endregion
@@ -58,10 +59,11 @@ export class Collider extends GameComponent {
 
 		this._aabb = {
 			position: { x: 0, y: 0 },
-			offset: { x: 0, y: 0 },
 			width: 0,
 			height: 0
 		};
+
+		this._aabbOffset = { x: 0, y: 0 };
 
 		this._currentColliders = [];
 
@@ -80,15 +82,15 @@ export class Collider extends GameComponent {
 	}
 
 	public setOffset(offset: Point2D) {
-		this.aabb.offset = Object.assign({}, offset);
+		this._aabbOffset = Object.assign({}, offset);
 		this.setPosition(this.aabb.position);
 	}
 
 	public setPosition(position: Point2D) {
 		this.aabb.position = Object.assign({}, position);
 		
-		this.aabb.position.x += this.aabb.offset.x;
-		this.aabb.position.y += this.aabb.offset.y;
+		this.aabb.position.x += this._aabbOffset.x;
+		this.aabb.position.y += this._aabbOffset.y;
 	}
 
 	public delete() {
@@ -143,6 +145,10 @@ export class Collider extends GameComponent {
 				}
 			}
 		});
+	}
+
+	public predictCollision() : void {
+
 	}
 
 	public static AABB(aabb1: AABB, aabb2: AABB): boolean {
