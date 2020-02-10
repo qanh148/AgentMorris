@@ -100,13 +100,14 @@ module objects {
 			return new Vector2(-1, 0);
 		}
 
-		public normalize() {
+		public normalize(): void {
 			let magnitude = this.magnitude;
 			if (magnitude > 9.99999974737875E-06) {
 				this.x = this.x / magnitude;
 				this.y = this.y / magnitude;
 			} else {
-				return Vector2.zero();
+				this.x = 0;
+				this.y = 0;
 			}
 		}
 

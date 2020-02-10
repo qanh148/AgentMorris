@@ -22,10 +22,12 @@ export class PlayerController {
 	private GenKeyMap(direction: MoveDirection): KeyMap {
 		return {
 			down: () => {
-				this._player.moveStart(direction);
+				this._player.eventManager.invoke("moveStart", direction);
+				// this._player.moveStart(direction);
 			},
 			up: () => {
-				this._player.moveStop(direction);
+				this._player.eventManager.invoke("moveStop", direction);
+				// this._player.moveStop(direction);
 			}
 		};
 	}

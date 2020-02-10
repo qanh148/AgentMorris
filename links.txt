@@ -1,2 +1,6 @@
 Create sprite sheets
 https://draeton.github.io/stitches/
+
+
+Typescript advanced tutorials
+// https://www.typescriptlang.org/docs/handbook/advanced-types.html#intersection-types

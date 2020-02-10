@@ -1,8 +1,8 @@
 import { Player } from "./objects/Player.js";
 import { PlayerController } from "./controllers/PlayerController.js";
-import { Collider } from "./engine/Collider.js";
+import { Collider } from "./engine/components/Collider.js";
 import { Wall } from "./objects/Wall.js";
-import { AABB } from "./engine/AABB.js";
+import { AABB } from "./engine/interfaces/AABB.js";
 
 let game = (function () {
 	let canvas: HTMLCanvasElement;
@@ -31,26 +31,21 @@ let game = (function () {
 		stage.update();
 
 		player.update();
-
-		Collider.update();
 	}
 
 	function main(): void {
-		player = new Player();
+		let wall = new Wall();
+		wall.position = { x: 200, y: 200 };
+		stage.addChild(wall.sprite);
 
-		player.sprite.x = 100;
-		player.sprite.y = 100;
+		player = new Player();
+		player.position = { x: 300, y: 200 };
 		stage.addChild(player.sprite);
 
 		playerController = new PlayerController(player);
 		playerController.initWASD();
 
-		let wall = new Wall();
-		wall.sprite.x = 200;
-		wall.sprite.y = 200;
-		stage.addChild(wall.sprite);
-
-		AABB.debugView = true;
+		Collider.debugView = true;
 
 		// let playerCollider:Collider = new Collider("player");
 		// let otherCollider:Collider = new Collider("other");

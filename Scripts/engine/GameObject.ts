@@ -1,27 +1,34 @@
-import { Collider } from "./Collider.js";
-import { Point2D } from "./Point2D.js";
+import { Collider } from "./components/Collider.js";
+import { EventManager } from "./components/EventManager.js";
+import { Point2D } from "./interfaces/Point2D.js";
 
 export abstract class GameObject {
-	// Public
-	public sprite: createjs.Sprite;
-	public collider: Collider;
+	private _eventManager: EventManager;
+	private _position: Point2D;
+	private _sprite: createjs.Sprite;
+	private _facingRight: boolean;
+	private _collider : Collider;
 
-	// TODO: Add AABB either here or in collider
-	// Probably in collider
+	//#region Property getters/setters
 
-	// Properties
+	public get eventManager(): EventManager {
+		return this._eventManager;
+	}
 
-	private _position: Point2D = new Point2D();
 	public get position(): Point2D {
 		return this._position;
 	}
 	public set position(v: Point2D) {
-		this._position = v;
+		this._position = Object.assign({}, v);
+		this.collider.setPosition(v);
 		this.sprite.x = v.x;
 		this.sprite.y = v.y;
 	}
 
-	private _facingRight: boolean = true;
+	public get sprite(): createjs.Sprite {
+		return this._sprite;
+	}
+
 	public get facingRight(): boolean {
 		return this._facingRight;
 	}
@@ -30,17 +37,25 @@ export abstract class GameObject {
 		this.sprite.scaleX = (value ? 1 : -1);
 	}
 
+	public get collider() : Collider {
+		return this._collider;
+	}
+
+	//#endregion
+
 	constructor(spriteSheetData: Object, colliderTag: string) {
+		this._eventManager = new EventManager(this);
+
+		this._position = {x:0, y:0};
+		
 		// https://www.createjs.com/docs/easeljs/classes/SpriteSheet.html
 		let spriteSheet = new createjs.SpriteSheet(spriteSheetData);
+		this._sprite = new createjs.Sprite(spriteSheet);
 
-		this.sprite = new createjs.Sprite(spriteSheet);
-		this.sprite.gotoAndPlay("idle");
+		this._facingRight = true;
+		this._collider = new Collider(this, colliderTag);
 
 		this.sprite.regX = 32;
 		this.sprite.regY = 32;
-
-		this.collider = new Collider(colliderTag);
 	}
-
 }
