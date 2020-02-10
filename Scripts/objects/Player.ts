@@ -11,9 +11,12 @@ export class Player extends MovingGameObject {
 				run: [2, 3, undefined, 0.4],
 			}
 		}, "player");
-		
 
 		this.sprite.gotoAndPlay("idle");
+
+		this.collider.aabb.width = 26;
+		this.collider.aabb.height = 32;
+		this.collider.setOffset({x: 16, y: 32});
 
 		// this.collider.onCollisionEnter = (collider) => {
 		// 	if (collider.tag == "wall") {

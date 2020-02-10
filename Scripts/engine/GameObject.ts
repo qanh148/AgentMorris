@@ -14,15 +14,13 @@ export abstract class GameObject {
 	public get eventManager(): EventManager {
 		return this._eventManager;
 	}
-	// public set eventManager(v : EventManager) {
-	// 	this._eventManager = v;
-	// }
 
 	public get position(): Point2D {
 		return this._position;
 	}
 	public set position(v: Point2D) {
-		this._position = v;
+		this._position = Object.assign({}, v);
+		this.collider.setPosition(v);
 		this.sprite.x = v.x;
 		this.sprite.y = v.y;
 	}
@@ -30,9 +28,6 @@ export abstract class GameObject {
 	public get sprite(): createjs.Sprite {
 		return this._sprite;
 	}
-	// public set sprite(v: createjs.Sprite) {
-	// 	this._sprite = v;
-	// }
 
 	public get facingRight(): boolean {
 		return this._facingRight;
@@ -44,9 +39,6 @@ export abstract class GameObject {
 
 	public get collider() : Collider {
 		return this._collider;
-	}
-	public set collider(v : Collider) {
-		this._collider = v;
 	}
 
 	//#endregion

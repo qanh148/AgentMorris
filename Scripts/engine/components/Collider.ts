@@ -3,6 +3,7 @@ import { EventManager, Listener } from "./EventManager.js";
 import { GameObject } from "../GameObject.js";
 import { GameComponent } from "../GameComponent.js";
 import { MovingGameObject } from "../MovingGameObject.js";
+import { Point2D } from "../interfaces/Point2D.js";
 
 // https://stackoverflow.com/questions/14638990/are-strongly-typed-functions-as-parameters-possible-in-typescript
 export type CollisionCallback = (collider: Collider) => any;
@@ -45,9 +46,6 @@ export class Collider extends GameComponent {
 	public get currentColliders(): Collider[] {
 		return this._currentColliders;
 	}
-	public set currentColliders(v: Collider[]) {
-		this._currentColliders = v;
-	}
 
 	//#endregion
 
@@ -69,15 +67,28 @@ export class Collider extends GameComponent {
 
 		Collider.colliders.push(this);
 
+		// TODO: Don't need to check collision every time you move,
+		// Rather, turn on a bool to check collision IF there was movement
+		// That check should be in a time based loop
+
 		if (this.parent instanceof MovingGameObject) {
 			this.parent.eventManager.addListener("moved", () => {
-				this.aabb.position = this.parent.position;
-				this.aabb.position.x += this.aabb.offset.x;
-				this.aabb.position.y += this.aabb.offset.y;
-
+				// this.setPosition(this.parent.position);
 				this.checkCollision();
 			});
 		}
+	}
+
+	public setOffset(offset: Point2D) {
+		this.aabb.offset = Object.assign({}, offset);
+		this.setPosition(this.aabb.position);
+	}
+
+	public setPosition(position: Point2D) {
+		this.aabb.position = Object.assign({}, position);
+		
+		this.aabb.position.x += this.aabb.offset.x;
+		this.aabb.position.y += this.aabb.offset.y;
 	}
 
 	public delete() {
@@ -108,7 +119,7 @@ export class Collider extends GameComponent {
 				let index = this.currentColliders.indexOf(otherCollider);
 				let otherColliderWasColliding = (index != -1);
 
-				if (Collider.AABB(this, otherCollider)) { // Has collision
+				if (Collider.AABB(this.aabb, otherCollider.aabb)) { // Has collision
 					if (!otherColliderWasColliding) { // Wasn't colliding before
 						// Send collision enter events
 						this.parent.eventManager.invoke("collisionEnter", otherCollider);
@@ -134,8 +145,15 @@ export class Collider extends GameComponent {
 		});
 	}
 
-	public static AABB(collider1: Collider, collider2: Collider): boolean {
-		return true;
+	public static AABB(aabb1: AABB, aabb2: AABB): boolean {
+		if (aabb1.position.x < aabb2.position.x + aabb2.width &&
+			aabb1.position.x + aabb1.width > aabb2.position.x &&
+			aabb1.position.y < aabb2.position.y + aabb2.height &&
+			aabb1.position.y + aabb1.height > aabb2.position.y) {
+				return true;
+		} else {
+			return false;
+		}
 	}
 
 	//#endregion

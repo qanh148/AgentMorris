@@ -46,7 +46,8 @@ module objects {
 		}
 
 		set position(position: Vector2) {
-			this._position = position;
+			this._position.x = position.x;
+			this._position.y = position.y;
 			this._bitmap.x = position.x;
 			this._bitmap.y = position.y;
 		}

@@ -11,5 +11,8 @@ export class Wall extends GameObject {
 		}, "wall");
 		
 		this.sprite.gotoAndPlay("idle");
+		
+		this.collider.aabb.width = 64;
+		this.collider.aabb.height = 64;
 	}
 }

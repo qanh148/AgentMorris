@@ -34,19 +34,16 @@ let game = (function () {
 	}
 
 	function main(): void {
-		player = new Player();
+		let wall = new Wall();
+		wall.position = { x: 200, y: 200 };
+		stage.addChild(wall.sprite);
 
-		player.sprite.x = 100;
-		player.sprite.y = 100;
+		player = new Player();
+		player.position = { x: 300, y: 200 };
 		stage.addChild(player.sprite);
 
 		playerController = new PlayerController(player);
 		playerController.initWASD();
-
-		let wall = new Wall();
-		wall.sprite.x = 200;
-		wall.sprite.y = 200;
-		stage.addChild(wall.sprite);
 
 		Collider.debugView = true;
 
