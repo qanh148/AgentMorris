@@ -6,9 +6,10 @@ export var MoveDirection;
     MoveDirection[MoveDirection["Left"] = 2] = "Left";
     MoveDirection[MoveDirection["Right"] = 3] = "Right";
 })(MoveDirection || (MoveDirection = {}));
+// BUG: Why is GameObject not defined?
 export class MovingGameObject extends GameObject {
-    constructor(spriteSheetData, colliderTag) {
-        super(spriteSheetData, colliderTag);
+    constructor(spriteSheetData, colliderData) {
+        super(spriteSheetData, colliderData);
         // Private
         this._moveSpeed = 5;
         this._movingX = 0;
@@ -21,14 +22,14 @@ export class MovingGameObject extends GameObject {
         this.eventManager.addListener("moveStop", moveDirection => {
             this.moveStop(moveDirection);
         });
-        this.eventManager.addListener("collisionEnter", otherColliderData => {
-            let otherCollider = otherColliderData;
+        this.eventManager.addListener("collisionEnter", otherColliderAbstract => {
+            let otherCollider = otherColliderAbstract;
             if (otherCollider.tag == "wall") {
                 this._collided = true;
             }
         });
-        this.eventManager.addListener("collisionExit", otherColliderData => {
-            let otherCollider = otherColliderData;
+        this.eventManager.addListener("collisionExit", otherColliderAbstract => {
+            let otherCollider = otherColliderAbstract;
             if (otherCollider.tag == "wall") {
                 this._collided = false;
             }
@@ -92,6 +93,7 @@ export class MovingGameObject extends GameObject {
         if (this._movingY != 0) {
             newPos.y += this._movingY;
         }
+        // TODO: Check collision before actually moving to avoid moving twice
         // Set new pos, which also sets collision etc
         this.position = newPos;
         this.eventManager.invoke("moved");

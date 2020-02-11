@@ -4,9 +4,6 @@ import { GameComponent } from "../GameComponent.js";
 import { MovingGameObject } from "../MovingGameObject.js";
 import { Point2D } from "../interfaces/Point2D.js";
 
-// https://stackoverflow.com/questions/14638990/are-strongly-typed-functions-as-parameters-possible-in-typescript
-export type CollisionCallback = (collider: Collider) => any;
-
 export interface ColliderData {
 	tag: string;
 	width: number;

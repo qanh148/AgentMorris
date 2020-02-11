@@ -7,10 +7,13 @@ export class Wall extends GameObject {
             animations: {
                 idle: 0
             }
-        }, "wall");
+        }, {
+            tag: "wall",
+            width: 64,
+            height: 64,
+            offset: { x: 0, y: 0 }
+        });
         this.sprite.gotoAndPlay("idle");
-        this.collider.aabb.width = 64;
-        this.collider.aabb.height = 64;
     }
 }
 //# sourceMappingURL=Wall.js.map

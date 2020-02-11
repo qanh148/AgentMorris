@@ -3,26 +3,29 @@ import { MovingGameObject } from "../MovingGameObject.js";
 export class Collider extends GameComponent {
     //#endregion
     //#region object functions
-    constructor(parent, tag) {
+    constructor(parent, data) {
         super(parent);
-        this._tag = tag;
+        this._tag = data.tag;
         this._aabb = {
             position: { x: 0, y: 0 },
-            offset: { x: 0, y: 0 },
-            width: 0,
-            height: 0
+            width: data.width,
+            height: data.height
         };
+        this._aabbOffset = Object.assign({}, data.offset);
         this._currentColliders = [];
         Collider.colliders.push(this);
         // TODO: Don't need to check collision every time you move,
         // Rather, turn on a bool to check collision IF there was movement
         // That check should be in a time based loop
+        // UPDATE: Nah, go with predicted next step model
         if (this.parent instanceof MovingGameObject) {
             this.parent.eventManager.addListener("moved", () => {
                 // this.setPosition(this.parent.position);
                 this.checkCollision();
             });
         }
+        let graphics = new createjs.Graphics().beginFill("#ff0000").drawRect(0, 0, 100, 100);
+        this._debugShape = new createjs.Shape(graphics);
     }
     //#endregion
     //#region Property getters/setters
@@ -32,20 +35,13 @@ export class Collider extends GameComponent {
     set tag(v) {
         this._tag = v;
     }
-    get aabb() {
-        return this._aabb;
-    }
     get currentColliders() {
         return this._currentColliders;
     }
-    setOffset(offset) {
-        this.aabb.offset = Object.assign({}, offset);
-        this.setPosition(this.aabb.position);
-    }
     setPosition(position) {
-        this.aabb.position = Object.assign({}, position);
-        this.aabb.position.x += this.aabb.offset.x;
-        this.aabb.position.y += this.aabb.offset.y;
+        this._aabb.position = Object.assign({}, position);
+        this._aabb.position.x += this._aabbOffset.x;
+        this._aabb.position.y += this._aabbOffset.y;
     }
     delete() {
         let index = Collider.colliders.indexOf(this);
@@ -69,7 +65,7 @@ export class Collider extends GameComponent {
                 // Check if exists in currentColliders
                 let index = this.currentColliders.indexOf(otherCollider);
                 let otherColliderWasColliding = (index != -1);
-                if (Collider.AABB(this.aabb, otherCollider.aabb)) { // Has collision
+                if (Collider.AABB(this._aabb, otherCollider._aabb)) { // Has collision
                     if (!otherColliderWasColliding) { // Wasn't colliding before
                         // Send collision enter events
                         this.parent.eventManager.invoke("collisionEnter", otherCollider);
@@ -93,6 +89,8 @@ export class Collider extends GameComponent {
             }
         });
     }
+    predictCollision() {
+    }
     static AABB(aabb1, aabb2) {
         if (aabb1.position.x < aabb2.position.x + aabb2.width &&
             aabb1.position.x + aabb1.width > aabb2.position.x &&
@@ -103,6 +101,10 @@ export class Collider extends GameComponent {
         else {
             return false;
         }
+    }
+    static toggleDebugView(toggle) {
+        this.debugView = toggle;
+        this.colliders.forEach;
     }
 }
 //#region static vars
