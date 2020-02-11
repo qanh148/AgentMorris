@@ -26,14 +26,14 @@ export class MovingGameObject extends GameObject {
 			this.moveStop(moveDirection);
 		});
 
-		this.eventManager.addListener("collisionEnter", otherColliderData => {
-			let otherCollider = otherColliderData as Collider;
+		this.eventManager.addListener("collisionEnter", otherColliderAbstract => {
+			let otherCollider = otherColliderAbstract as Collider;
 			if (otherCollider.tag == "wall") {
 				this._collided = true;
 			}
 		});
-		this.eventManager.addListener("collisionExit", otherColliderData => {
-			let otherCollider = otherColliderData as Collider;
+		this.eventManager.addListener("collisionExit", otherColliderAbstract => {
+			let otherCollider = otherColliderAbstract as Collider;
 			if (otherCollider.tag == "wall") {
 				this._collided = false;
 			}
