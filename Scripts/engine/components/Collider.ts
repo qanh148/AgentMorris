@@ -1,7 +1,6 @@
 import { AABB } from "../interfaces/AABB.js";
 import { GameObject } from "../GameObject.js";
 import { GameComponent } from "../GameComponent.js";
-import { MovingGameObject } from "../MovingGameObject.js";
 import { Point2D } from "../interfaces/Point2D.js";
 
 export interface ColliderData {
@@ -70,18 +69,6 @@ export class Collider extends GameComponent {
 		this._currentColliders = [];
 
 		Collider.colliders.push(this);
-
-		// TODO: Don't need to check collision every time you move,
-		// Rather, turn on a bool to check collision IF there was movement
-		// That check should be in a time based loop
-		// UPDATE: Nah, go with predicted next step model
-
-		if (this.parent instanceof MovingGameObject) {
-			this.parent.eventManager.addListener("moved", () => {
-				// this.setPosition(this.parent.position);
-				this.checkCollision();
-			});
-		}
 
 		let graphics = new createjs.Graphics().beginFill("#ff0000").drawRect(0, 0, 100, 100);
 		this._debugShape = new createjs.Shape(graphics);

@@ -1,6 +1,6 @@
 import { Player } from "../objects/Player.js";
 import { KeyboardInput, KeyMap } from "./KeyboardInput.js";
-import { MoveDirection } from "../engine/MovingGameObject.js";
+import { MoveDirection } from "../engine/components/Mover.js";
 
 export class PlayerController {
 	private _player: Player;

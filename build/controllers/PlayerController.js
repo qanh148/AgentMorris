@@ -1,5 +1,5 @@
 import { KeyboardInput } from "./KeyboardInput.js";
-import { MoveDirection } from "../engine/MovingGameObject.js";
+import { MoveDirection } from "../engine/components/Mover.js";
 export class PlayerController {
     constructor(player) {
         this._player = player;

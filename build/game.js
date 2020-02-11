@@ -18,7 +18,7 @@ let game = (function () {
     }
     function update() {
         stage.update();
-        // player.update();
+        player.mover.update();
     }
     function main() {
         let wall = new Wall();

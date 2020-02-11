@@ -1,7 +1,18 @@
-import { MovingGameObject } from "../engine/MovingGameObject.js";
 import { GameObject } from "../engine/GameObject.js";
+import { Mover } from "../engine/components/Mover.js";
 
 export class Player extends GameObject {
+	private _mover : Mover;
+
+
+	public get mover() : Mover {
+		return this._mover;
+	}
+	public set mover(v : Mover) {
+		this._mover = v;
+	}
+	
+
 	constructor() {
 		super({
 			images: ["./Assets/images/AgentMorris_SpriteSheet.png"],
@@ -19,6 +30,9 @@ export class Player extends GameObject {
 		});
 
 		this.sprite.gotoAndPlay("idle");
+
+
+		this._mover = new Mover(this);
 
 		// this.collider.onCollisionEnter = (collider) => {
 		// 	if (collider.tag == "wall") {

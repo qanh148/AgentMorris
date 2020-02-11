@@ -24,6 +24,8 @@ Module exporting
 Module vs Target compilation
 // https://stackoverflow.com/questions/41993811/understanding-target-and-module-in-tsconfig
 
+Component based architecture
+// https://www.html5gamedevs.com/topic/31386-component-based-architecture-in-typescript/?do=findComment&comment=180372
 
 CreateJS tutorials and reference
 

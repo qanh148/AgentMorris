@@ -28,7 +28,7 @@ let game = (function () {
 	function update(): void {
 		stage.update();
 
-		// player.update();
+		player.mover.update();
 	}
 
 	function main(): void {

@@ -1,4 +1,5 @@
 import { GameObject } from "../engine/GameObject.js";
+import { Mover } from "../engine/components/Mover.js";
 export class Player extends GameObject {
     constructor() {
         super({
@@ -16,11 +17,18 @@ export class Player extends GameObject {
             offset: { x: 16, y: 32 }
         });
         this.sprite.gotoAndPlay("idle");
+        this._mover = new Mover(this);
         // this.collider.onCollisionEnter = (collider) => {
         // 	if (collider.tag == "wall") {
         // 		console.log("hit wall");
         // 	}
         // };
+    }
+    get mover() {
+        return this._mover;
+    }
+    set mover(v) {
+        this._mover = v;
     }
 }
 //# sourceMappingURL=Player.js.map
