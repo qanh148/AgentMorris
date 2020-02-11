@@ -9,10 +9,6 @@ let game = (function () {
 	let player: Player;
 	let playerController: PlayerController;
 
-	// REMINDER: Use EaselJS EventDispatcher
-
-	// TODO: Make scenes
-
 	function start(): void {
 		canvas = document.getElementsByTagName('canvas')[0];
 		stage = new createjs.Stage(canvas);

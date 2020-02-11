@@ -23,6 +23,9 @@ export class Mover extends GameComponent {
 		// Rather, turn on a bool to check collision IF there was movement
 		// That check should be in a time based loop
 		// UPDATE: Nah, go with predicted next step model
+		// ALSO: Check collision before actually moving to avoid moving twice
+		// ALSO: Determine if there's a better way to prevent movement instead of this flag
+
 		this.parent.eventManager.addListener("moved", () => {
 			// this.setPosition(this.parent.position);
 			this.parent.collider.checkCollision();
@@ -115,13 +118,9 @@ export class Mover extends GameComponent {
 			newPos.y += this._movingY;
 		}
 
-		// TODO: Check collision before actually moving to avoid moving twice
-
 		// Set new pos, which also sets collision etc
 		this.parent.position = newPos;
 		this.parent.eventManager.invoke("moved");
-
-		// TODO: Determine if there's a better way to prevent movement instead of this flag
 
 		// Move back based on collision
 		if (this._collided) {
