@@ -7,8 +7,8 @@ export var MoveDirection;
     MoveDirection[MoveDirection["Right"] = 3] = "Right";
 })(MoveDirection || (MoveDirection = {}));
 export class MovingGameObject extends GameObject {
-    constructor(spriteSheetData, colliderData) {
-        super(spriteSheetData, colliderData);
+    constructor(spriteSheetData, colliderTag) {
+        super(spriteSheetData, colliderTag);
         // Private
         this._moveSpeed = 5;
         this._movingX = 0;
@@ -92,7 +92,6 @@ export class MovingGameObject extends GameObject {
         if (this._movingY != 0) {
             newPos.y += this._movingY;
         }
-        // TODO: Check collision before actually moving to avoid moving twice
         // Set new pos, which also sets collision etc
         this.position = newPos;
         this.eventManager.invoke("moved");

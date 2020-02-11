@@ -2,14 +2,14 @@ import { Collider } from "./components/Collider.js";
 import { EventManager } from "./components/EventManager.js";
 export class GameObject {
     //#endregion
-    constructor(spriteSheetData, colliderData) {
+    constructor(spriteSheetData, colliderTag) {
         this._eventManager = new EventManager(this);
         this._position = { x: 0, y: 0 };
         // https://www.createjs.com/docs/easeljs/classes/SpriteSheet.html
         let spriteSheet = new createjs.SpriteSheet(spriteSheetData);
         this._sprite = new createjs.Sprite(spriteSheet);
         this._facingRight = true;
-        this._collider = new Collider(this, colliderData);
+        this._collider = new Collider(this, colliderTag);
         this.sprite.regX = 32;
         this.sprite.regY = 32;
     }
