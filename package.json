@@ -1,7 +1,7 @@
 {
   "name": "agentmorris",
   "version": "1.0.0",
-  "description": "",
+  "description": "Top-down stealth shooter game",
   "browser": "index.html",
   "scripts": {
     "test": "tsc && lite-server",

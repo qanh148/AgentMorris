@@ -123,3 +123,38 @@ dist
 # TypeScript custom
 
 build/**/*.map
+
+
+# CreateJS Unignore dependencies
+# Remember to create an empty .nojekyll file for GitHub pages
+# https://github.com/isaacs/github/issues/844
+
+node_modules/*
+
+# EaselJS
+!node_modules/easeljs/
+node_modules/easeljs/*
+!node_modules/easeljs/lib/
+node_modules/easeljs/lib/*
+!node_modules/easeljs/lib/easeljs.min.js
+
+# TweenJS
+!node_modules/tweenjs/
+node_modules/tweenjs/*
+!node_modules/tweenjs/lib/
+node_modules/tweenjs/lib/*
+!node_modules/tweenjs/lib/tweenjs.min.js
+
+# SoundJS
+!node_modules/soundjs/
+node_modules/soundjs/*
+!node_modules/soundjs/lib/
+node_modules/soundjs/lib/*
+!node_modules/soundjs/lib/soundjs.min.js
+
+# PreloadJS
+!node_modules/preloadjs/
+node_modules/preloadjs/*
+!node_modules/preloadjs/lib/
+node_modules/preloadjs/lib/*
+!node_modules/preloadjs/lib/preloadjs.min.js
