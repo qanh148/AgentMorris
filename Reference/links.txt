@@ -1,3 +1,5 @@
+General
+
 Create sprite sheets
 https://draeton.github.io/stitches/
 
@@ -31,3 +33,10 @@ CreateJS tutorials and reference
 
 SpriteSheet
 // https://www.createjs.com/docs/easeljs/classes/SpriteSheet.html
+
+
+ESLint
+
+Configuration
+// https://www.wisdomgeek.com/development/web-development/how-to-setup-eslint-for-typescript-code/
+
