@@ -29,6 +29,10 @@ Module vs Target compilation
 Component based architecture
 // https://www.html5gamedevs.com/topic/31386-component-based-architecture-in-typescript/?do=findComment&comment=180372
 
+Constructor type signature
+// https://dev.to/krumpet/generic-type-guard-in-typescript-258l
+
+
 CreateJS tutorials and reference
 
 SpriteSheet

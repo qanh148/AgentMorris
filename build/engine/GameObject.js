@@ -1,43 +1,48 @@
-import { Collider } from "./components/Collider.js";
-import { EventManager } from "./components/EventManager.js";
+import { Transform } from "./components/Transform.js";
 export class GameObject {
     //#endregion
-    constructor(spriteSheetData, colliderData) {
-        this._eventManager = new EventManager(this);
-        this._position = { x: 0, y: 0 };
-        // https://www.createjs.com/docs/easeljs/classes/SpriteSheet.html
-        let spriteSheet = new createjs.SpriteSheet(spriteSheetData);
-        this._sprite = new createjs.Sprite(spriteSheet);
-        this._facingRight = true;
-        this._collider = new Collider(this, colliderData);
-        this.sprite.regX = 32;
-        this.sprite.regY = 32;
+    constructor() {
+        this._components = [];
+        // Init with a Transform component
+        this.addComponent(Transform, new Transform(this));
     }
     //#region Property getters/setters
-    get eventManager() {
-        return this._eventManager;
+    get components() {
+        return this._components;
     }
-    get position() {
-        return this._position;
+    //
+    addComponent(gameComponentType, component) {
+        if (this.hasComponent(gameComponentType)) {
+            throw new Error("Already have component of type: " + gameComponentType);
+        }
+        else {
+            this.components.push(component);
+        }
     }
-    set position(v) {
-        this._position = Object.assign({}, v);
-        this.collider.setPosition(v);
-        this.sprite.x = v.x;
-        this.sprite.y = v.y;
+    hasComponent(gameComponentType) {
+        let result = false;
+        this.components.some(c => {
+            if (c instanceof gameComponentType) {
+                result = true;
+                return;
+            }
+        });
+        return result;
     }
-    get sprite() {
-        return this._sprite;
-    }
-    get facingRight() {
-        return this._facingRight;
-    }
-    set facingRight(value) {
-        this._facingRight = value;
-        this.sprite.scaleX = (value ? 1 : -1);
-    }
-    get collider() {
-        return this._collider;
+    getComponent(gameComponentType) {
+        let component;
+        this.components.some(c => {
+            if (c instanceof gameComponentType) {
+                component = c;
+                return;
+            }
+        });
+        if (component == undefined) {
+            throw new Error("Component not found");
+        }
+        return component;
     }
 }
+// Reference:
+// https://www.html5gamedevs.com/topic/31386-component-based-architecture-in-typescript/?tab=comments#comment-180372
 //# sourceMappingURL=GameObject.js.map

@@ -2,6 +2,7 @@ import { AABB } from "../interfaces/AABB.js";
 import { GameObject } from "../GameObject.js";
 import { GameComponent } from "../GameComponent.js";
 import { Point2D } from "../interfaces/Point2D.js";
+import { EventManager } from "./EventManager.js";
 
 export interface ColliderData {
 	tag: string;
@@ -25,6 +26,8 @@ export class Collider extends GameComponent {
 	//#endregion
 
 	//#region object vars
+
+	private eventManager: EventManager;
 
 	private _tag: string;
 
@@ -53,8 +56,10 @@ export class Collider extends GameComponent {
 
 	//#region object functions
 
-	constructor(parent: GameObject, data: ColliderData) {
-		super(parent);
+	constructor(gameObject: GameObject, data: ColliderData) {
+		super(gameObject);
+
+		this.eventManager = gameObject.getComponent(EventManager);
 
 		this._tag = data.tag;
 
@@ -112,8 +117,8 @@ export class Collider extends GameComponent {
 				if (Collider.AABB(this._aabb, otherCollider._aabb)) { // Has collision
 					if (!otherColliderWasColliding) { // Wasn't colliding before
 						// Send collision enter events
-						this.parent.eventManager.invoke("collisionEnter", otherCollider);
-						otherCollider.parent.eventManager.invoke("collisionEnter", this);
+						this.eventManager.invoke("collisionEnter", otherCollider);
+						otherCollider.eventManager.invoke("collisionEnter", this);
 
 						// Save to arrays
 						this.currentColliders.push(otherCollider);
@@ -122,8 +127,8 @@ export class Collider extends GameComponent {
 				} else { // No collision
 					if (otherColliderWasColliding) { // Was colliding before
 						// Send collision exut events
-						this.parent.eventManager.invoke("collisionExit", otherCollider);
-						otherCollider.parent.eventManager.invoke("collisionExit", this);
+						this.eventManager.invoke("collisionExit", otherCollider);
+						otherCollider.eventManager.invoke("collisionExit", this);
 
 						// Remove from arrays
 						this.currentColliders.splice(index, 1);

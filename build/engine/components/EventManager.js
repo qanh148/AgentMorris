@@ -13,9 +13,10 @@ export class Event {
         this._listeners.push(listener);
     }
     removeListener(listener) {
-        let index = this._listeners.indexOf(listener);
+        const index = this._listeners.indexOf(listener);
         this._listeners.splice(index, 1);
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     invoke(data) {
         this._listeners.forEach(listener => {
             listener(data);
@@ -29,8 +30,8 @@ export class Event {
  * @class EventManager
  */
 export class EventManager extends GameComponent {
-    constructor(parent) {
-        super(parent);
+    constructor(gameObject) {
+        super(gameObject);
         this._events = new Map();
     }
     addListener(name, listener) {
@@ -42,13 +43,14 @@ export class EventManager extends GameComponent {
         this._events.set(name, event);
     }
     removeListener(name, listener) {
-        let event = this._events.get(name);
+        const event = this._events.get(name);
         if (event != undefined) {
             event.removeListener(listener);
         }
     }
-    invoke(name, data = {}) {
-        let event = this._events.get(name);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    invoke(name, data = undefined) {
+        const event = this._events.get(name);
         if (event != undefined) {
             event.invoke(data);
         }
