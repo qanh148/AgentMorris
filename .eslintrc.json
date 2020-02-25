@@ -1,0 +1,22 @@
+{
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+		"ecmaVersion": 6,
+		"sourceType": "module"
+	},
+	"env": {
+		"browser": true,
+		"es6": true
+	},
+	"plugins": [
+		"@typescript-eslint"
+	],
+	"extends": [
+		"eslint:recommended",
+		"plugin:@typescript-eslint/recommended"
+	],
+	"globals": {
+		"createjs": "readonly"
+	},
+	"ignorePatterns": ["/Scripts/archive/"]
+}

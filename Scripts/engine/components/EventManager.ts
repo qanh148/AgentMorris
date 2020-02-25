@@ -3,7 +3,8 @@ import { GameComponent } from "../GameComponent.js";
 
 // Type instead of an interface
 // Previously tried interface instead of an abstract class
-export type Listener = (data: any) => any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Listener = (data: any) => void;
 
 /**
  * An event class used within the event manager
@@ -18,16 +19,17 @@ export class Event {
 		this._listeners = [];
 	}
 
-	public addListener(listener: Listener) {
+	public addListener(listener: Listener): void {
 		this._listeners.push(listener);
 	}
 
-	public removeListener(listener: Listener) {
-		let index = this._listeners.indexOf(listener);
+	public removeListener(listener: Listener): void {
+		const index = this._listeners.indexOf(listener);
 		this._listeners.splice(index, 1);
 	}
 
-	public invoke(data: any) {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	public invoke(data: any): void {
 		this._listeners.forEach(listener => {
 			listener(data);
 		});
@@ -59,14 +61,15 @@ export class EventManager extends GameComponent {
 	}
 
 	public removeListener(name: string, listener: Listener): void {
-		let event = this._events.get(name)
+		const event = this._events.get(name)
 		if (event != undefined) {
 			event.removeListener(listener);
 		}
 	}
 
-	public invoke(name: string, data: any = {}) {
-		let event = this._events.get(name)
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	public invoke(name: string, data: any = undefined): void {
+		const event = this._events.get(name)
 		if (event != undefined) {
 			event.invoke(data);
 		}

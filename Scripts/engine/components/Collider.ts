@@ -13,7 +13,7 @@ export interface ColliderData {
 export class Collider extends GameComponent {
 	//#region static vars
 
-	private static debugView: boolean = false;
+	private static debugView = false;
 
 	private static colliders: Collider[];
 	private static _initialized = false;
@@ -27,7 +27,7 @@ export class Collider extends GameComponent {
 	//#region object vars
 
 	private _tag: string;
-	
+
 	private _aabb: AABB;
 	private _aabbOffset: Point2D;
 	private _currentColliders: Collider[];
@@ -70,19 +70,19 @@ export class Collider extends GameComponent {
 
 		Collider.colliders.push(this);
 
-		let graphics = new createjs.Graphics().beginFill("#ff0000").drawRect(0, 0, 100, 100);
+		const graphics = new createjs.Graphics().beginFill("#ff0000").drawRect(0, 0, 100, 100);
 		this._debugShape = new createjs.Shape(graphics);
 	}
 
-	public setPosition(position: Point2D) {
+	public setPosition(position: Point2D): void {
 		this._aabb.position = Object.assign({}, position);
-		
+
 		this._aabb.position.x += this._aabbOffset.x;
 		this._aabb.position.y += this._aabbOffset.y;
 	}
 
-	public delete() {
-		let index = Collider.colliders.indexOf(this);
+	public delete(): void {
+		const index = Collider.colliders.indexOf(this);
 		Collider.colliders.splice(index, 1);
 	}
 
@@ -106,8 +106,8 @@ export class Collider extends GameComponent {
 		Collider.colliders.forEach(otherCollider => { // For all colliders
 			if (this !== otherCollider) { // If not self
 				// Check if exists in currentColliders
-				let index = this.currentColliders.indexOf(otherCollider);
-				let otherColliderWasColliding = (index != -1);
+				const index = this.currentColliders.indexOf(otherCollider);
+				const otherColliderWasColliding = (index != -1);
 
 				if (Collider.AABB(this._aabb, otherCollider._aabb)) { // Has collision
 					if (!otherColliderWasColliding) { // Wasn't colliding before
@@ -127,7 +127,7 @@ export class Collider extends GameComponent {
 
 						// Remove from arrays
 						this.currentColliders.splice(index, 1);
-						let otherIndex = otherCollider.currentColliders.indexOf(this);
+						const otherIndex = otherCollider.currentColliders.indexOf(this);
 						otherCollider.currentColliders.splice(otherIndex, 1);
 					}
 				}
@@ -135,24 +135,24 @@ export class Collider extends GameComponent {
 		});
 	}
 
-	public predictCollision() : void {
+	// public predictCollision(): void {
 
-	}
+	// }
 
 	public static AABB(aabb1: AABB, aabb2: AABB): boolean {
 		if (aabb1.position.x < aabb2.position.x + aabb2.width &&
 			aabb1.position.x + aabb1.width > aabb2.position.x &&
 			aabb1.position.y < aabb2.position.y + aabb2.height &&
 			aabb1.position.y + aabb1.height > aabb2.position.y) {
-				return true;
+			return true;
 		} else {
 			return false;
 		}
 	}
-	
-	public static toggleDebugView(toggle:boolean) {
+
+	public static toggleDebugView(toggle: boolean): void {
 		this.debugView = toggle;
-		
+
 		this.colliders.forEach
 	}
 

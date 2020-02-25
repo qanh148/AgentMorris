@@ -1,6 +1,6 @@
 export type KeyMap = {
-	up: () => any;
-	down: () => any;
+	up: () => void;
+	down: () => void;
 };
 
 export class KeyboardInput {

@@ -1,6 +1,6 @@
 import { GameComponent } from "../GameComponent.js";
 import { Point2D } from "../interfaces/Point2D.js";
-import { ColliderData, Collider } from "./Collider.js";
+import { Collider } from "./Collider.js";
 import { GameObject } from "../GameObject.js";
 
 export enum MoveDirection {
@@ -9,11 +9,11 @@ export enum MoveDirection {
 
 export class Mover extends GameComponent {
 	// Private
-	private _moveSpeed: number = 5;
-	private _movingX: number = 0;
-	private _movingY: number = 0;
+	private _moveSpeed = 5;
+	private _movingX = 0;
+	private _movingY = 0;
 
-	private _collided: boolean = false;
+	private _collided = false;
 	private _lastUncollidedPos: Point2D = { x: 0, y: 0 };
 
 	constructor(parent: GameObject) {
@@ -39,20 +39,20 @@ export class Mover extends GameComponent {
 		});
 
 		this.parent.eventManager.addListener("collisionEnter", otherColliderAbstract => {
-			let otherCollider = otherColliderAbstract as Collider;
+			const otherCollider = otherColliderAbstract as Collider;
 			if (otherCollider.tag == "wall") {
 				this._collided = true;
 			}
 		});
 		this.parent.eventManager.addListener("collisionExit", otherColliderAbstract => {
-			let otherCollider = otherColliderAbstract as Collider;
+			const otherCollider = otherColliderAbstract as Collider;
 			if (otherCollider.tag == "wall") {
 				this._collided = false;
 			}
 		});
 	}
 
-	public moveStart(moveDirection: MoveDirection) {
+	public moveStart(moveDirection: MoveDirection): void {
 		switch (moveDirection) {
 			case MoveDirection.Up:
 				this._movingY = -this._moveSpeed;
@@ -75,7 +75,7 @@ export class Mover extends GameComponent {
 		}
 	}
 
-	public moveStop(moveDirection: MoveDirection) {
+	public moveStop(moveDirection: MoveDirection): void {
 		switch (moveDirection) {
 			case MoveDirection.Up:
 			case MoveDirection.Down:
@@ -96,14 +96,14 @@ export class Mover extends GameComponent {
 		}
 	}
 
-	public update() {
+	public update(): void {
 		if (this._movingX != 0 || this._movingY != 0) {
 			this.updateMove();
 		}
 	}
 
-	private updateMove() {
-		let newPos: Point2D = Object.assign({}, this.parent.position);
+	private updateMove(): void {
+		const newPos: Point2D = Object.assign({}, this.parent.position);
 
 		// If first run, save pos
 		if (this._lastUncollidedPos.x == 0 && this._lastUncollidedPos.y == 0) {

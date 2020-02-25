@@ -6,7 +6,7 @@
 	"scripts": {
 		"test": "tsc && lite-server",
 		"tsc": "tsc",
-		"lint": "eslint . --ext .ts"
+		"lintAuto": "eslint ./Scripts/ --ext .ts --fix"
 	},
 	"repository": {
 		"type": "git",
@@ -26,23 +26,6 @@
 		"url": "https://github.com/AbbyNode/AgentMorris/issues"
 	},
 	"homepage": "https://github.com/AbbyNode/AgentMorris#readme",
-	"eslintConfig": {
-		"parser": "@typescript-eslint/parser",
-		"parserOptions": {
-			"ecmaVersion": 6,
-			"sourceType": "module"
-		},
-		"plugins": [
-			"@typescript-eslint"
-		],
-		"env": {
-			"browser": true
-		},
-		"extends": [
-			"eslint:recommended",
-			"plugin:@typescript-eslint/recommended"
-		]
-	},
 	"dependencies": {
 		"createjs": "^1.0.1",
 		"easeljs": "^1.0.2",
