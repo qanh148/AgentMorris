@@ -2,33 +2,15 @@ import { Player } from "./objects/Player.js";
 import { PlayerController } from "./controllers/PlayerController.js";
 import { Wall } from "./objects/Wall.js";
 
-let game = (function () {
+(function (): void {
 	let canvas: HTMLCanvasElement;
 	let stage: createjs.Stage;
 
 	let player: Player;
 	let playerController: PlayerController;
 
-	function start(): void {
-		canvas = document.getElementsByTagName('canvas')[0];
-		stage = new createjs.Stage(canvas);
-
-		createjs.Ticker.framerate = 60; // fps
-		createjs.Ticker.on('tick', update);
-
-		// stage.enableMouseOver(20);
-
-		main();
-	}
-
-	function update(): void {
-		stage.update();
-
-		player.mover.update();
-	}
-
 	function main(): void {
-		let wall = new Wall();
+		const wall = new Wall();
 		wall.position = { x: 200, y: 200 };
 		stage.addChild(wall.sprite);
 
@@ -43,7 +25,24 @@ let game = (function () {
 
 		// let playerCollider:Collider = new Collider("player");
 		// let otherCollider:Collider = new Collider("other");
+	}
+	
+	function update(): void {
+		stage.update();
 
+		player.mover.update();
+	}
+	
+	function start(): void {
+		canvas = document.getElementsByTagName('canvas')[0];
+		stage = new createjs.Stage(canvas);
+
+		createjs.Ticker.framerate = 60; // fps
+		createjs.Ticker.on('tick', update);
+
+		// stage.enableMouseOver(20);
+
+		main();
 	}
 
 	window.addEventListener("load", start);

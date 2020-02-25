@@ -2,13 +2,13 @@ import { GameObject } from "../engine/GameObject.js";
 import { Mover } from "../engine/components/Mover.js";
 
 export class Player extends GameObject {
-	private _mover : Mover;
+	private _mover: Mover;
 
 
-	public get mover() : Mover {
+	public get mover(): Mover {
 		return this._mover;
 	}
-	public set mover(v : Mover) {
+	public set mover(v: Mover) {
 		this._mover = v;
 	}
 	

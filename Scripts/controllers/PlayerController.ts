@@ -21,11 +21,11 @@ export class PlayerController {
 
 	private GenKeyMap(direction: MoveDirection): KeyMap {
 		return {
-			down: () => {
+			down: (): void => {
 				this._player.eventManager.invoke("moveStart", direction);
 				// this._player.moveStart(direction);
 			},
-			up: () => {
+			up: (): void => {
 				this._player.eventManager.invoke("moveStop", direction);
 				// this._player.moveStop(direction);
 			}
