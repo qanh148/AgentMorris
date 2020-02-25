@@ -1,4 +1,5 @@
 import { GameObject } from "../engine/GameObject.js";
+import { Mover } from "../engine/components/Mover.js";
 import { SpriteRenderer } from "../engine/components/SpriteRenderer.js";
 import { Collider } from "../engine/components/Collider.js";
 export class Player extends GameObject {
@@ -19,6 +20,7 @@ export class Player extends GameObject {
             height: 32,
             offset: { x: 16, y: 32 }
         }));
+        this.addComponent(Mover, new Mover(this));
         this._init();
     }
     _init() {

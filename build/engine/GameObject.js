@@ -1,19 +1,28 @@
 import { Transform } from "./components/Transform.js";
+import { EventManager } from "./components/EventManager.js";
 export class GameObject {
     //#endregion
     constructor() {
         this._components = [];
-        // Init with a Transform component
-        this.addComponent(Transform, new Transform(this));
+        this._transform = new Transform(this);
+        this.addComponent(Transform, this._transform);
+        this._eventManager = new EventManager(this);
+        this.addComponent(EventManager, this._eventManager);
     }
     //#region Property getters/setters
     get components() {
         return this._components;
     }
+    get transform() {
+        return this._transform;
+    }
+    get eventManager() {
+        return this._eventManager;
+    }
     //
     addComponent(gameComponentType, component) {
         if (this.hasComponent(gameComponentType)) {
-            throw new Error("Already have component of type: " + gameComponentType);
+            throw new Error("Already have component of type: " + gameComponentType.name);
         }
         else {
             this.components.push(component);
@@ -38,7 +47,7 @@ export class GameObject {
             }
         });
         if (component == undefined) {
-            throw new Error("Component not found");
+            throw new Error("Component " + gameComponentType.name + " not found");
         }
         return component;
     }

@@ -13,6 +13,8 @@ export abstract class GameComponent {
 	constructor(gameObject: GameObject) {
 		this._gameObject = gameObject;
 	}
+
+	public update() {}
 }
 
 export interface GameComponentType<T extends GameComponent> {

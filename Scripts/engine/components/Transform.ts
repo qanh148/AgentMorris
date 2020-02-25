@@ -10,11 +10,11 @@ export class Transform extends GameComponent {
 	}
 	public set position(v: Point2D) {
 		this._position = Object.assign({}, v);
+		this.gameObject.eventManager.invoke("TransformPositionUpdate", v);
 	}
 
 	constructor(gameObject: GameObject) {
 		super(gameObject);
-
 		this._position = {x:0, y:0};
 	}
 }

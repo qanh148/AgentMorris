@@ -24,6 +24,8 @@ export class Player extends GameObject {
 			offset: { x: 16, y: 32 }
 		}));
 
+		this.addComponent(Mover, new Mover(this));
+
 		this._init();
 	}
 

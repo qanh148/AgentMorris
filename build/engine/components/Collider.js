@@ -1,11 +1,9 @@
 import { GameComponent } from "../GameComponent.js";
-import { EventManager } from "./EventManager.js";
 export class Collider extends GameComponent {
     //#endregion
     //#region object functions
     constructor(gameObject, data) {
         super(gameObject);
-        this.eventManager = gameObject.getComponent(EventManager);
         this._tag = data.tag;
         this._aabb = {
             position: { x: 0, y: 0 },
@@ -17,6 +15,9 @@ export class Collider extends GameComponent {
         Collider.colliders.push(this);
         const graphics = new createjs.Graphics().beginFill("#ff0000").drawRect(0, 0, 100, 100);
         this._debugShape = new createjs.Shape(graphics);
+        this.gameObject.eventManager.addListener("TransformPositionUpdate", data => {
+            this._aabb.position = Object.assign({}, data);
+        });
     }
     //#endregion
     //#region Property getters/setters
@@ -59,8 +60,8 @@ export class Collider extends GameComponent {
                 if (Collider.AABB(this._aabb, otherCollider._aabb)) { // Has collision
                     if (!otherColliderWasColliding) { // Wasn't colliding before
                         // Send collision enter events
-                        this.eventManager.invoke("collisionEnter", otherCollider);
-                        otherCollider.eventManager.invoke("collisionEnter", this);
+                        this.gameObject.eventManager.invoke("collisionEnter", otherCollider);
+                        otherCollider.gameObject.eventManager.invoke("collisionEnter", this);
                         // Save to arrays
                         this.currentColliders.push(otherCollider);
                         otherCollider.currentColliders.push(this);
@@ -69,8 +70,8 @@ export class Collider extends GameComponent {
                 else { // No collision
                     if (otherColliderWasColliding) { // Was colliding before
                         // Send collision exut events
-                        this.eventManager.invoke("collisionExit", otherCollider);
-                        otherCollider.eventManager.invoke("collisionExit", this);
+                        this.gameObject.eventManager.invoke("collisionExit", otherCollider);
+                        otherCollider.gameObject.eventManager.invoke("collisionExit", this);
                         // Remove from arrays
                         this.currentColliders.splice(index, 1);
                         const otherIndex = otherCollider.currentColliders.indexOf(this);

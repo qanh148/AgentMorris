@@ -4,10 +4,12 @@ import { MoveDirection } from "../engine/components/Mover.js";
 
 export class PlayerController {
 	private _player: Player;
+
 	private _keyboardInput: KeyboardInput;
 
 	constructor(player: Player) {
 		this._player = player;
+
 		this._keyboardInput = new KeyboardInput();
 	}
 

@@ -8,6 +8,10 @@ export class SpriteRenderer extends GameComponent {
         this.sprite.regX = 32;
         this.sprite.regY = 32;
         this._facingRight = true;
+        this.gameObject.eventManager.addListener("TransformPositionUpdate", data => {
+            this.sprite.x = data.x;
+            this.sprite.y = data.y;
+        });
     }
     get sprite() {
         return this._sprite;

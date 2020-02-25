@@ -2,7 +2,6 @@ import { GameComponent } from "../GameComponent.js";
 import { Point2D } from "../interfaces/Point2D.js";
 import { Collider } from "./Collider.js";
 import { GameObject } from "../GameObject.js";
-import { EventManager } from "./EventManager.js";
 import { SpriteRenderer } from "./SpriteRenderer.js";
 import { Transform } from "./Transform.js";
 
@@ -12,7 +11,6 @@ export enum MoveDirection {
 
 export class Mover extends GameComponent {
 	private transform: Transform;
-	private eventManager: EventManager;
 	private spriteRenderer: SpriteRenderer;
 	private collider: Collider;
 	
@@ -28,7 +26,6 @@ export class Mover extends GameComponent {
 		super(gameObject);
 
 		this.transform = gameObject.getComponent(Transform);
-		this.eventManager = gameObject.getComponent(EventManager);
 		this.spriteRenderer = gameObject.getComponent(SpriteRenderer);
 		this.collider = gameObject.getComponent(Collider);
 
@@ -39,25 +36,25 @@ export class Mover extends GameComponent {
 		// ALSO: Check collision before actually moving to avoid moving twice
 		// ALSO: Determine if there's a better way to prevent movement instead of this flag
 
-		this.eventManager.addListener("moved", () => {
+		this.gameObject.eventManager.addListener("moved", () => {
 			// this.setPosition(this.parent.position);
 			this.collider.checkCollision();
 		});
 
-		this.eventManager.addListener("moveStart", moveDirection => {
+		this.gameObject.eventManager.addListener("moveStart", moveDirection => {
 			this.moveStart(moveDirection);
 		});
-		this.eventManager.addListener("moveStop", moveDirection => {
+		this.gameObject.eventManager.addListener("moveStop", moveDirection => {
 			this.moveStop(moveDirection);
 		});
 
-		this.eventManager.addListener("collisionEnter", otherColliderAbstract => {
+		this.gameObject.eventManager.addListener("collisionEnter", otherColliderAbstract => {
 			const otherCollider = otherColliderAbstract as Collider;
 			if (otherCollider.tag == "wall") {
 				this._collided = true;
 			}
 		});
-		this.eventManager.addListener("collisionExit", otherColliderAbstract => {
+		this.gameObject.eventManager.addListener("collisionExit", otherColliderAbstract => {
 			const otherCollider = otherColliderAbstract as Collider;
 			if (otherCollider.tag == "wall") {
 				this._collided = false;
@@ -132,8 +129,8 @@ export class Mover extends GameComponent {
 		}
 
 		// Set new pos, which also sets collision etc
-		this.transform.parent.position = newPos;
-		this.eventManager.invoke("moved");
+		this.transform.position = newPos;
+		this.gameObject.eventManager.invoke("moved");
 
 		// Move back based on collision
 		if (this._collided) {
