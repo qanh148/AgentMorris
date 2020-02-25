@@ -1,18 +1,19 @@
 import { GameObject } from "./GameObject";
 
 export abstract class GameComponent {
-	private _parent: GameObject;
+	private _gameObject : GameObject;
 
-	public get parent(): GameObject {
-		return this._parent;
+	public get gameObject() : GameObject {
+		return this._gameObject;
 	}
-	public set parent(v: GameObject) {
-		this._parent = v;
-	}
+	// public set gameObject(v : GameObject) {
+	// 	this._gameObject = v;
+	// }
 	
-	constructor(parent: GameObject) {
-		this._parent = parent;
+	constructor(gameObject:GameObject) {
+		this._gameObject = gameObject;
 	}
 }
 
-// TODO: Use this https://www.html5gamedevs.com/topic/31386-component-based-architecture-in-typescript/?tab=comments#comment-180372
+// Reference:
+// https://www.html5gamedevs.com/topic/31386-component-based-architecture-in-typescript/?tab=comments#comment-180372
