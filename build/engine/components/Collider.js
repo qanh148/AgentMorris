@@ -2,8 +2,8 @@ import { GameComponent } from "../GameComponent.js";
 export class Collider extends GameComponent {
     //#endregion
     //#region object functions
-    constructor(parent, data) {
-        super(parent);
+    constructor(gameObject, data) {
+        super(gameObject);
         this._tag = data.tag;
         this._aabb = {
             position: { x: 0, y: 0 },
@@ -13,8 +13,11 @@ export class Collider extends GameComponent {
         this._aabbOffset = Object.assign({}, data.offset);
         this._currentColliders = [];
         Collider.colliders.push(this);
-        let graphics = new createjs.Graphics().beginFill("#ff0000").drawRect(0, 0, 100, 100);
+        const graphics = new createjs.Graphics().beginFill("#ff0000").drawRect(0, 0, 100, 100);
         this._debugShape = new createjs.Shape(graphics);
+        this.gameObject.eventManager.addListener("TransformPositionUpdate", data => {
+            this._aabb.position = Object.assign({}, data);
+        });
     }
     //#endregion
     //#region Property getters/setters
@@ -33,7 +36,7 @@ export class Collider extends GameComponent {
         this._aabb.position.y += this._aabbOffset.y;
     }
     delete() {
-        let index = Collider.colliders.indexOf(this);
+        const index = Collider.colliders.indexOf(this);
         Collider.colliders.splice(index, 1);
     }
     //#endregion
@@ -52,13 +55,13 @@ export class Collider extends GameComponent {
         Collider.colliders.forEach(otherCollider => {
             if (this !== otherCollider) { // If not self
                 // Check if exists in currentColliders
-                let index = this.currentColliders.indexOf(otherCollider);
-                let otherColliderWasColliding = (index != -1);
+                const index = this.currentColliders.indexOf(otherCollider);
+                const otherColliderWasColliding = (index != -1);
                 if (Collider.AABB(this._aabb, otherCollider._aabb)) { // Has collision
                     if (!otherColliderWasColliding) { // Wasn't colliding before
                         // Send collision enter events
-                        this.parent.eventManager.invoke("collisionEnter", otherCollider);
-                        otherCollider.parent.eventManager.invoke("collisionEnter", this);
+                        this.gameObject.eventManager.invoke("collisionEnter", otherCollider);
+                        otherCollider.gameObject.eventManager.invoke("collisionEnter", this);
                         // Save to arrays
                         this.currentColliders.push(otherCollider);
                         otherCollider.currentColliders.push(this);
@@ -67,19 +70,19 @@ export class Collider extends GameComponent {
                 else { // No collision
                     if (otherColliderWasColliding) { // Was colliding before
                         // Send collision exut events
-                        this.parent.eventManager.invoke("collisionExit", otherCollider);
-                        otherCollider.parent.eventManager.invoke("collisionExit", this);
+                        this.gameObject.eventManager.invoke("collisionExit", otherCollider);
+                        otherCollider.gameObject.eventManager.invoke("collisionExit", this);
                         // Remove from arrays
                         this.currentColliders.splice(index, 1);
-                        let otherIndex = otherCollider.currentColliders.indexOf(this);
+                        const otherIndex = otherCollider.currentColliders.indexOf(this);
                         otherCollider.currentColliders.splice(otherIndex, 1);
                     }
                 }
             }
         });
     }
-    predictCollision() {
-    }
+    // public predictCollision(): void {
+    // }
     static AABB(aabb1, aabb2) {
         if (aabb1.position.x < aabb2.position.x + aabb2.width &&
             aabb1.position.x + aabb1.width > aabb2.position.x &&

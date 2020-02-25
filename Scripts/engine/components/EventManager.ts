@@ -45,8 +45,8 @@ export class Event {
 export class EventManager extends GameComponent {
 	private _events: Map<string, Event>;
 
-	constructor(parent: GameObject) {
-		super(parent);
+	constructor(gameObject: GameObject) {
+		super(gameObject);
 		this._events = new Map();
 	}
 

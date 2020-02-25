@@ -1,6 +1,8 @@
 import { Player } from "./objects/Player.js";
 import { PlayerController } from "./controllers/PlayerController.js";
 import { Wall } from "./objects/Wall.js";
+import { SpriteRenderer } from "./engine/components/SpriteRenderer.js";
+import { Mover } from "./engine/components/Mover.js";
 
 (function (): void {
 	let canvas: HTMLCanvasElement;
@@ -11,12 +13,12 @@ import { Wall } from "./objects/Wall.js";
 
 	function main(): void {
 		const wall = new Wall();
-		wall.position = { x: 200, y: 200 };
-		stage.addChild(wall.sprite);
+		wall.transform.position = { x: 200, y: 200 };
+		stage.addChild(wall.getComponent(SpriteRenderer).sprite);
 
 		player = new Player();
-		player.position = { x: 300, y: 200 };
-		stage.addChild(player.sprite);
+		player.transform.position = { x: 300, y: 200 };
+		stage.addChild(player.getComponent(SpriteRenderer).sprite);
 
 		playerController = new PlayerController(player);
 		playerController.initWASD();
@@ -30,7 +32,7 @@ import { Wall } from "./objects/Wall.js";
 	function update(): void {
 		stage.update();
 
-		player.mover.update();
+		player.getComponent(Mover).update();
 	}
 	
 	function start(): void {

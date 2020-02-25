@@ -1,62 +1,79 @@
-import { Collider, ColliderData } from "./components/Collider.js";
+import { GameComponent, GameComponentType } from "./GameComponent.js";
+import { Transform } from "./components/Transform.js";
 import { EventManager } from "./components/EventManager.js";
-import { Point2D } from "./interfaces/Point2D.js";
 
 export abstract class GameObject {
+	private _components: GameComponent[];
+	
+	private _transform: Transform;
 	private _eventManager: EventManager;
-	private _position: Point2D;
-	private _sprite: createjs.Sprite;
-	private _facingRight: boolean;
-	private _collider: Collider;
 
 	//#region Property getters/setters
+	
+	public get components(): GameComponent[] {
+		return this._components;
+	}
+
+	public get transform(): Transform {
+		return this._transform;
+	}
 
 	public get eventManager(): EventManager {
 		return this._eventManager;
 	}
 
-	public get position(): Point2D {
-		return this._position;
-	}
-	public set position(v: Point2D) {
-		this._position = Object.assign({}, v);
-		this.collider.setPosition(v);
-		this.sprite.x = v.x;
-		this.sprite.y = v.y;
-	}
-
-	public get sprite(): createjs.Sprite {
-		return this._sprite;
-	}
-
-	public get facingRight(): boolean {
-		return this._facingRight;
-	}
-	public set facingRight(value: boolean) {
-		this._facingRight = value;
-		this.sprite.scaleX = (value ? 1 : -1);
-	}
-
-	public get collider(): Collider {
-		return this._collider;
-	}
-
 	//#endregion
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	constructor(spriteSheetData: Record<string, any>, colliderData: ColliderData) {
+	constructor() {
+		this._components = [];
+
+		this._transform = new Transform(this);
+		this.addComponent(Transform, this._transform);
+
 		this._eventManager = new EventManager(this);
+		this.addComponent(EventManager, this._eventManager);
+	}
 
-		this._position = {x:0, y:0};
-		
-		// https://www.createjs.com/docs/easeljs/classes/SpriteSheet.html
-		const spriteSheet = new createjs.SpriteSheet(spriteSheetData);
-		this._sprite = new createjs.Sprite(spriteSheet);
+	//
 
-		this._facingRight = true;
-		this._collider = new Collider(this, colliderData);
+	public addComponent<T extends GameComponent>(gameComponentType: GameComponentType<T>, component: T): void {
+		if (this.hasComponent(gameComponentType)) {
+			throw new Error("Already have component of type: " + gameComponentType.name);
+		} else {
+			this.components.push(component);
+		}
+	}
 
-		this.sprite.regX = 32;
-		this.sprite.regY = 32;
+	public hasComponent<T extends GameComponent>(gameComponentType: GameComponentType<T>): boolean {
+		let result = false;
+
+		this.components.some(c => {
+			if (c instanceof gameComponentType) {
+				result = true;
+				return;
+			}
+		});
+
+		return result;
+	}
+
+	public getComponent<T extends GameComponent>(gameComponentType: GameComponentType<T>): T {
+		let component;
+
+		this.components.some(c => {
+			if (c instanceof gameComponentType) {
+				component = c;
+				return;
+			}
+		});
+
+		if (component == undefined) {
+			throw new Error("Component " + gameComponentType.name + " not found");
+		}
+
+		return component;
 	}
 }
+
+// Reference:
+// https://www.html5gamedevs.com/topic/31386-component-based-architecture-in-typescript/?tab=comments#comment-180372

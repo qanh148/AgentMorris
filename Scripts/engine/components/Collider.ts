@@ -53,8 +53,8 @@ export class Collider extends GameComponent {
 
 	//#region object functions
 
-	constructor(parent: GameObject, data: ColliderData) {
-		super(parent);
+	constructor(gameObject: GameObject, data: ColliderData) {
+		super(gameObject);
 
 		this._tag = data.tag;
 
@@ -72,6 +72,10 @@ export class Collider extends GameComponent {
 
 		const graphics = new createjs.Graphics().beginFill("#ff0000").drawRect(0, 0, 100, 100);
 		this._debugShape = new createjs.Shape(graphics);
+
+		this.gameObject.eventManager.addListener("TransformPositionUpdate", data => {
+			this._aabb.position = Object.assign({}, data);
+		});
 	}
 
 	public setPosition(position: Point2D): void {
@@ -112,8 +116,8 @@ export class Collider extends GameComponent {
 				if (Collider.AABB(this._aabb, otherCollider._aabb)) { // Has collision
 					if (!otherColliderWasColliding) { // Wasn't colliding before
 						// Send collision enter events
-						this.parent.eventManager.invoke("collisionEnter", otherCollider);
-						otherCollider.parent.eventManager.invoke("collisionEnter", this);
+						this.gameObject.eventManager.invoke("collisionEnter", otherCollider);
+						otherCollider.gameObject.eventManager.invoke("collisionEnter", this);
 
 						// Save to arrays
 						this.currentColliders.push(otherCollider);
@@ -122,8 +126,8 @@ export class Collider extends GameComponent {
 				} else { // No collision
 					if (otherColliderWasColliding) { // Was colliding before
 						// Send collision exut events
-						this.parent.eventManager.invoke("collisionExit", otherCollider);
-						otherCollider.parent.eventManager.invoke("collisionExit", this);
+						this.gameObject.eventManager.invoke("collisionExit", otherCollider);
+						otherCollider.gameObject.eventManager.invoke("collisionExit", this);
 
 						// Remove from arrays
 						this.currentColliders.splice(index, 1);

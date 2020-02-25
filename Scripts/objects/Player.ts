@@ -1,20 +1,13 @@
 import { GameObject } from "../engine/GameObject.js";
 import { Mover } from "../engine/components/Mover.js";
+import { SpriteRenderer } from "../engine/components/SpriteRenderer.js";
+import { Collider } from "../engine/components/Collider.js";
 
 export class Player extends GameObject {
-	private _mover: Mover;
-
-
-	public get mover(): Mover {
-		return this._mover;
-	}
-	public set mover(v: Mover) {
-		this._mover = v;
-	}
-	
-
 	constructor() {
-		super({
+		super();
+
+		this.addComponent(SpriteRenderer, new SpriteRenderer(this, {
 			images: ["./Assets/images/AgentMorris_SpriteSheet.png"],
 			frames: { width: 64, height: 64 },
 			animations: {
@@ -22,22 +15,21 @@ export class Player extends GameObject {
 				walk: [2, 3, undefined, 0.2],
 				run: [2, 3, undefined, 0.4],
 			}
-		}, {
+		}));
+
+		this.addComponent(Collider, new Collider(this, {
 			tag: "player",
 			width: 26,
 			height: 32,
-			offset: {x: 16, y: 32}
-		});
+			offset: { x: 16, y: 32 }
+		}));
 
-		this.sprite.gotoAndPlay("idle");
+		this.addComponent(Mover, new Mover(this));
 
+		this._init();
+	}
 
-		this._mover = new Mover(this);
-
-		// this.collider.onCollisionEnter = (collider) => {
-		// 	if (collider.tag == "wall") {
-		// 		console.log("hit wall");
-		// 	}
-		// };
+	private _init() {
+		this.getComponent(SpriteRenderer).sprite.gotoAndPlay("idle");
 	}
 }
