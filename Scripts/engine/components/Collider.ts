@@ -71,11 +71,19 @@ export class Collider extends GameComponent {
 
 		Collider.colliders.push(this);
 
-		const graphics = new createjs.Graphics().beginFill("#ff0000").drawRect(0, 0, 100, 100);
+		const graphics = new createjs.Graphics().beginStroke("#ff0000").drawRect(0, 0, data.width, data.height);
 		this._debugShape = new createjs.Shape(graphics);
+		// TODO: Don't hard-code regXY values
+		this._debugShape.regX = 32;
+		this._debugShape.regY = 32;
 
-		this.gameObject.eventManager.addListener(EventName.Transform_PositionChange, data => {
-			this._aabb.position = Object.assign({}, data);
+		this.gameObject.container.addChild(this._debugShape);
+		// this.gameObject.eventManager.addListener(EventName.GameObject_Init, stage => {
+		// 	(stage as createjs.Stage).addChild(this._debugShape);
+		// });
+
+		this.gameObject.eventManager.addListener(EventName.Transform_PositionChange, position => {
+			this.setPosition(position as Point2D);
 		});
 	}
 
@@ -84,6 +92,9 @@ export class Collider extends GameComponent {
 
 		this._aabb.position.x += this._aabbOffset.x;
 		this._aabb.position.y += this._aabbOffset.y;
+
+		this._debugShape.x = this._aabb.position.x;
+		this._debugShape.y = this._aabb.position.y;
 	}
 
 	public delete(): void {

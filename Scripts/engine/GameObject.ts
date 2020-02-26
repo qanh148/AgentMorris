@@ -5,6 +5,8 @@ import { EventName } from "./components/EventName.js";
 
 export abstract class GameObject {
 	private _components: GameComponent[];
+
+	private _container: createjs.Container;
 	
 	private _transform: Transform;
 	private _eventManager: EventManager;
@@ -13,6 +15,10 @@ export abstract class GameObject {
 	
 	public get components(): GameComponent[] {
 		return this._components;
+	}
+
+	public get container(): createjs.Container {
+		return this._container;
 	}
 
 	public get transform(): Transform {
@@ -28,6 +34,8 @@ export abstract class GameObject {
 	constructor() {
 		this._components = [];
 
+		this._container = new createjs.Container();
+
 		this._transform = new Transform(this);
 		this.addComponent(Transform, this._transform);
 
@@ -36,6 +44,7 @@ export abstract class GameObject {
 	}
 
 	public init(stage: createjs.Stage): void {
+		stage.addChild(this._container);
 		this.eventManager.invoke(EventName.GameObject_Init, stage);
 	}
 

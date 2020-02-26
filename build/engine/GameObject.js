@@ -5,6 +5,7 @@ export class GameObject {
     //#endregion
     constructor() {
         this._components = [];
+        this._container = new createjs.Container();
         this._transform = new Transform(this);
         this.addComponent(Transform, this._transform);
         this._eventManager = new EventManager(this);
@@ -14,6 +15,9 @@ export class GameObject {
     get components() {
         return this._components;
     }
+    get container() {
+        return this._container;
+    }
     get transform() {
         return this._transform;
     }
@@ -21,6 +25,7 @@ export class GameObject {
         return this._eventManager;
     }
     init(stage) {
+        stage.addChild(this._container);
         this.eventManager.invoke(EventName.GameObject_Init, stage);
     }
     update() {

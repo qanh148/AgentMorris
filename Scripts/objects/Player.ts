@@ -24,8 +24,8 @@ export class Player extends GameObject {
 		this.addComponent(Collider, new Collider(this, {
 			tag: "player",
 			width: 26,
-			height: 32,
-			offset: { x: 16, y: 32 }
+			height: 28,
+			offset: { x: 19, y: 36 }
 		}));
 
 		this.addComponent(Mover, new Mover(this));

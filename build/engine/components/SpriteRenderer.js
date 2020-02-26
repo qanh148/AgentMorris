@@ -10,9 +10,10 @@ export class SpriteRenderer extends GameComponent {
         this.sprite.regX = 32;
         this.sprite.regY = 32;
         this._facingRight = true;
-        this.gameObject.eventManager.addListener(EventName.GameObject_Init, stage => {
-            stage.addChild(this.sprite);
-        });
+        this.gameObject.container.addChild(this.sprite);
+        // this.gameObject.eventManager.addListener(EventName.GameObject_Init, stage => {
+        // 	(stage as createjs.Stage).addChild(this.sprite);
+        // });
         this.gameObject.eventManager.addListener(EventName.Transform_PositionChange, data => {
             this.sprite.x = data.x;
             this.sprite.y = data.y;
@@ -33,9 +34,9 @@ export class SpriteRenderer extends GameComponent {
     get facingRight() {
         return this._facingRight;
     }
-    set facingRight(value) {
-        this._facingRight = value;
-        this.sprite.scaleX = (value ? 1 : -1);
+    set facingRight(toggle) {
+        this._facingRight = toggle;
+        this.sprite.scaleX = (toggle ? 1 : -1);
     }
 }
 //# sourceMappingURL=SpriteRenderer.js.map
