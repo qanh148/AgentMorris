@@ -21,7 +21,7 @@ export class GameObject {
         return this._eventManager;
     }
     init(stage) {
-        this.eventManager.invoke(EventName.GameObject_Init);
+        this.eventManager.invoke(EventName.GameObject_Init, stage);
     }
     update() {
         this.eventManager.invoke(EventName.GameObject_Update);

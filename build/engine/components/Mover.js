@@ -46,6 +46,9 @@ export class Mover extends GameComponent {
                 this._collided = false;
             }
         });
+        this.gameObject.eventManager.addListener(EventName.GameObject_Update, () => {
+            this.update();
+        });
     }
     moveStart(moveDirection) {
         switch (moveDirection) {

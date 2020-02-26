@@ -1,4 +1,6 @@
 export enum EventName {
+	/* eslint-disable @typescript-eslint/camelcase */
+
 	// GameObject
 	GameObject_Init,
 	GameObject_Update,
@@ -16,4 +18,6 @@ export enum EventName {
 
 	// Mover
 	Mover_Moved,
+
+	/* eslint-enable @typescript-eslint/camelcase */
 }

@@ -2,7 +2,6 @@ import { Player } from "./objects/Player.js";
 import { PlayerController } from "./controllers/PlayerController.js";
 import { Wall } from "./objects/Wall.js";
 import { SpriteRenderer } from "./engine/components/SpriteRenderer.js";
-import { Mover } from "./engine/components/Mover.js";
 class Game {
     constructor() {
         window.addEventListener("load", () => {
@@ -13,6 +12,9 @@ class Game {
     }
     start() {
         this.canvas = document.getElementsByTagName('canvas')[0];
+        if (this.canvas == undefined) {
+            throw new Error("Canvas not found");
+        }
         this.stage = new createjs.Stage(this.canvas);
         createjs.Ticker.framerate = 60; // fps
         createjs.Ticker.on('tick', this.update, this);
@@ -34,7 +36,7 @@ class Game {
     update() {
         var _a;
         (_a = this.stage) === null || _a === void 0 ? void 0 : _a.update();
-        this.player.getComponent(Mover).update();
+        this.player.update();
     }
 }
 new Game();

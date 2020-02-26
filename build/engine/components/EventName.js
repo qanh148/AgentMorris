@@ -1,5 +1,6 @@
 export var EventName;
 (function (EventName) {
+    /* eslint-disable @typescript-eslint/camelcase */
     // GameObject
     EventName[EventName["GameObject_Init"] = 0] = "GameObject_Init";
     EventName[EventName["GameObject_Update"] = 1] = "GameObject_Update";
@@ -13,5 +14,6 @@ export var EventName;
     EventName[EventName["Collider_CollisionExit"] = 6] = "Collider_CollisionExit";
     // Mover
     EventName[EventName["Mover_Moved"] = 7] = "Mover_Moved";
+    /* eslint-enable @typescript-eslint/camelcase */
 })(EventName || (EventName = {}));
 //# sourceMappingURL=EventName.js.map

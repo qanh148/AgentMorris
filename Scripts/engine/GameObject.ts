@@ -35,11 +35,11 @@ export abstract class GameObject {
 		this.addComponent(EventManager, this._eventManager);
 	}
 
-	public init(stage: createjs.Stage) {
-		this.eventManager.invoke(EventName.GameObject_Init);
+	public init(stage: createjs.Stage): void {
+		this.eventManager.invoke(EventName.GameObject_Init, stage);
 	}
 
-	public update() {
+	public update(): void {
 		this.eventManager.invoke(EventName.GameObject_Update);
 	}
 

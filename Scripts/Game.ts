@@ -2,7 +2,6 @@ import { Player } from "./objects/Player.js";
 import { PlayerController } from "./controllers/PlayerController.js";
 import { Wall } from "./objects/Wall.js";
 import { SpriteRenderer } from "./engine/components/SpriteRenderer.js";
-import { Mover } from "./engine/components/Mover.js";
 
 class Game {
 	private canvas?: HTMLCanvasElement;
@@ -22,6 +21,11 @@ class Game {
 	
 	start(): void {
 		this.canvas = document.getElementsByTagName('canvas')[0];
+
+		if (this.canvas == undefined) {
+			throw new Error("Canvas not found");
+		}
+		
 		this.stage = new createjs.Stage(this.canvas);
 
 		createjs.Ticker.framerate = 60; // fps
@@ -50,8 +54,7 @@ class Game {
 	
 	update(): void {
 		this.stage?.update();
-
-		this.player.getComponent(Mover).update();
+		this.player.update();
 	}
 }
 
