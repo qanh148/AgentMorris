@@ -14,6 +14,9 @@ export var EventName;
     EventName[EventName["Collider_CollisionExit"] = 6] = "Collider_CollisionExit";
     // Mover
     EventName[EventName["Mover_Moved"] = 7] = "Mover_Moved";
+    EventName[EventName["Mover_Turned"] = 8] = "Mover_Turned";
+    EventName[EventName["Mover_StartWalk"] = 9] = "Mover_StartWalk";
+    EventName[EventName["Mover_StopWalk"] = 10] = "Mover_StopWalk";
     /* eslint-enable @typescript-eslint/camelcase */
 })(EventName || (EventName = {}));
 //# sourceMappingURL=EventName.js.map

@@ -18,6 +18,9 @@ export enum EventName {
 
 	// Mover
 	Mover_Moved,
+	Mover_Turned,
+	Mover_StartWalk,
+	Mover_StopWalk,
 
 	/* eslint-enable @typescript-eslint/camelcase */
 }

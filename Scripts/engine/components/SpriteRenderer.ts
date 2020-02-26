@@ -35,5 +35,17 @@ export class SpriteRenderer extends GameComponent {
 			this.sprite.x = data.x;
 			this.sprite.y = data.y;
 		});
+
+		this.gameObject.eventManager.addListener(EventName.Mover_Turned, data => {
+			this.facingRight = data.facingRight;
+		})
+
+		this.gameObject.eventManager.addListener(EventName.Mover_StartWalk, () => {
+			this.sprite.gotoAndPlay("walk");
+		})
+
+		this.gameObject.eventManager.addListener(EventName.Mover_StopWalk, () => {
+			this.sprite.gotoAndPlay("idle");
+		})
 	}
 }

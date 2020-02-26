@@ -1,6 +1,5 @@
 import { GameComponent } from "../GameComponent.js";
 import { Collider } from "./Collider.js";
-import { SpriteRenderer } from "./SpriteRenderer.js";
 import { Transform } from "./Transform.js";
 import { EventName } from "./EventName.js";
 // TODO: Const enum?
@@ -21,7 +20,6 @@ export class Mover extends GameComponent {
         this._collided = false;
         this._lastUncollidedPos = { x: 0, y: 0 };
         this.transform = gameObject.getComponent(Transform);
-        this.spriteRenderer = gameObject.getComponent(SpriteRenderer);
         this.collider = gameObject.getComponent(Collider);
         // TODO: Predicted next AABB step model
         this.gameObject.eventManager.addListener(EventName.Mover_Moved, () => {
@@ -59,16 +57,16 @@ export class Mover extends GameComponent {
                 this._movingY = this._moveSpeed;
                 break;
             case MoveDirection.Left:
-                this.spriteRenderer.facingRight = false;
+                this.gameObject.eventManager.invoke(EventName.Mover_Turned, { facingRight: false });
                 this._movingX = -this._moveSpeed;
                 break;
             case MoveDirection.Right:
-                this.spriteRenderer.facingRight = true;
+                this.gameObject.eventManager.invoke(EventName.Mover_Turned, { facingRight: true });
                 this._movingX = this._moveSpeed;
                 break;
         }
         if (this._movingX != 0 || this._movingY != 0) {
-            this.spriteRenderer.sprite.gotoAndPlay("walk");
+            this.gameObject.eventManager.invoke(EventName.Mover_StartWalk);
         }
     }
     moveStop(moveDirection) {
@@ -78,16 +76,16 @@ export class Mover extends GameComponent {
                 this._movingY = 0;
                 break;
             case MoveDirection.Left:
-                this.spriteRenderer.facingRight = false;
+                this.gameObject.eventManager.invoke(EventName.Mover_Turned, { facingRight: false });
                 this._movingX = 0;
                 break;
             case MoveDirection.Right:
-                this.spriteRenderer.facingRight = true;
+                this.gameObject.eventManager.invoke(EventName.Mover_Turned, { facingRight: true });
                 this._movingX = 0;
                 break;
         }
         if (this._movingX == 0 && this._movingY == 0) {
-            this.spriteRenderer.sprite.gotoAndPlay("idle");
+            this.gameObject.eventManager.invoke(EventName.Mover_StopWalk);
         }
     }
     update() {

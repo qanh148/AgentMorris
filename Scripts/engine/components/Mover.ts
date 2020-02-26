@@ -13,7 +13,6 @@ export enum MoveDirection {
 
 export class Mover extends GameComponent {
 	private transform: Transform;
-	private spriteRenderer: SpriteRenderer;
 	private collider: Collider;
 	
 	// Private
@@ -28,7 +27,6 @@ export class Mover extends GameComponent {
 		super(gameObject);
 
 		this.transform = gameObject.getComponent(Transform);
-		this.spriteRenderer = gameObject.getComponent(SpriteRenderer);
 		this.collider = gameObject.getComponent(Collider);
 
 		// TODO: Predicted next AABB step model
@@ -72,17 +70,17 @@ export class Mover extends GameComponent {
 				this._movingY = this._moveSpeed;
 				break;
 			case MoveDirection.Left:
-				this.spriteRenderer.facingRight = false;
+				this.gameObject.eventManager.invoke(EventName.Mover_Turned, {facingRight: false});
 				this._movingX = -this._moveSpeed;
 				break;
 			case MoveDirection.Right:
-				this.spriteRenderer.facingRight = true;
+				this.gameObject.eventManager.invoke(EventName.Mover_Turned, {facingRight: true});
 				this._movingX = this._moveSpeed;
 				break;
 		}
 
 		if (this._movingX != 0 || this._movingY != 0) {
-			this.spriteRenderer.sprite.gotoAndPlay("walk");
+			this.gameObject.eventManager.invoke(EventName.Mover_StartWalk);
 		}
 	}
 
@@ -93,17 +91,17 @@ export class Mover extends GameComponent {
 				this._movingY = 0;
 				break;
 			case MoveDirection.Left:
-				this.spriteRenderer.facingRight = false;
+				this.gameObject.eventManager.invoke(EventName.Mover_Turned, {facingRight: false});
 				this._movingX = 0;
 				break;
 			case MoveDirection.Right:
-				this.spriteRenderer.facingRight = true;
+				this.gameObject.eventManager.invoke(EventName.Mover_Turned, {facingRight: true});
 				this._movingX = 0;
 				break;
 		}
 
 		if (this._movingX == 0 && this._movingY == 0) {
-			this.spriteRenderer.sprite.gotoAndPlay("idle");
+			this.gameObject.eventManager.invoke(EventName.Mover_StopWalk);
 		}
 	}
 
