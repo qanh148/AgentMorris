@@ -1,7 +1,6 @@
 import { Player } from "./objects/Player.js";
 import { PlayerController } from "./controllers/PlayerController.js";
 import { Wall } from "./objects/Wall.js";
-import { SpriteRenderer } from "./engine/components/SpriteRenderer.js";
 class Game {
     constructor() {
         window.addEventListener("load", () => {
@@ -22,12 +21,14 @@ class Game {
         this.main();
     }
     main() {
-        var _a, _b;
+        if (this.stage == undefined) {
+            throw new Error("Stage is not defined");
+        }
         const wall = new Wall();
         wall.transform.position = { x: 200, y: 200 };
-        (_a = this.stage) === null || _a === void 0 ? void 0 : _a.addChild(wall.getComponent(SpriteRenderer).sprite);
+        wall.init(this.stage);
         this.player.transform.position = { x: 300, y: 200 };
-        (_b = this.stage) === null || _b === void 0 ? void 0 : _b.addChild(this.player.getComponent(SpriteRenderer).sprite);
+        this.player.init(this.stage);
         this.playerController.initWASD();
         // Collider.debugView = true;
         // let playerCollider:Collider = new Collider("player");

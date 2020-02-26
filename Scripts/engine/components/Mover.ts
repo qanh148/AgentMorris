@@ -2,7 +2,6 @@ import { GameComponent } from "../GameComponent.js";
 import { Point2D } from "../interfaces/Point2D.js";
 import { Collider } from "./Collider.js";
 import { GameObject } from "../GameObject.js";
-import { SpriteRenderer } from "./SpriteRenderer.js";
 import { Transform } from "./Transform.js";
 import { EventName } from "./EventName.js";
 
@@ -13,7 +12,7 @@ export enum MoveDirection {
 
 export class Mover extends GameComponent {
 	private transform: Transform;
-	private collider: Collider;
+	private collider?: Collider;
 	
 	// Private
 	private _moveSpeed = 5;
@@ -26,14 +25,16 @@ export class Mover extends GameComponent {
 	constructor(gameObject: GameObject) {
 		super(gameObject);
 
-		this.transform = gameObject.getComponent(Transform);
-		this.collider = gameObject.getComponent(Collider);
+		this.transform = gameObject.getComponent(Transform) as Transform;
+		this.collider = gameObject.getComponent(Collider); // may be undefined
 
 		// TODO: Predicted next AABB step model
 
 		this.gameObject.eventManager.addListener(EventName.Mover_Moved, () => {
 			// this.setPosition(this.parent.position);
-			this.collider.checkCollision();
+			if (this.collider != undefined) {
+				this.collider.checkCollision();
+			}
 		});
 
 		this.gameObject.eventManager.addListener(EventName.PlayerController_MoveStart, moveDirection => {

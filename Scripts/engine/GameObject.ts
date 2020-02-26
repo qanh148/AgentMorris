@@ -45,6 +45,14 @@ export abstract class GameObject {
 
 	//#region Components
 
+	/**
+	 * Adds specified component to this GameObject
+	 *
+	 * @template T
+	 * @param {GameComponentType<T>} gameComponentType
+	 * @param {T} component
+	 * @memberof GameObject
+	 */
 	public addComponent<T extends GameComponent>(gameComponentType: GameComponentType<T>, component: T): void {
 		if (this.hasComponent(gameComponentType)) {
 			throw new Error("Already have component of type: " + gameComponentType.name);
@@ -53,6 +61,14 @@ export abstract class GameObject {
 		}
 	}
 
+	/**
+	 * Returns whether this GameObject has component of type gameComponentType
+	 *
+	 * @template T
+	 * @param {GameComponentType<T>} gameComponentType
+	 * @returns {boolean}
+	 * @memberof GameObject
+	 */
 	public hasComponent<T extends GameComponent>(gameComponentType: GameComponentType<T>): boolean {
 		let result = false;
 
@@ -66,8 +82,16 @@ export abstract class GameObject {
 		return result;
 	}
 
-	public getComponent<T extends GameComponent>(gameComponentType: GameComponentType<T>): T {
-		let component;
+	/**
+	 * Returns component of type gameComponentType if it exists. Otherwise returns undefined.
+	 *
+	 * @template T
+	 * @param {GameComponentType<T>} gameComponentType
+	 * @returns {(T | undefined)}
+	 * @memberof GameObject
+	 */
+	public getComponent<T extends GameComponent>(gameComponentType: GameComponentType<T>): T | undefined {
+		let component = undefined;
 
 		this.components.some(c => {
 			if (c instanceof gameComponentType) {
@@ -75,10 +99,6 @@ export abstract class GameObject {
 				return;
 			}
 		});
-
-		if (component == undefined) {
-			throw new Error("Component " + gameComponentType.name + " not found");
-		}
 
 		return component;
 	}

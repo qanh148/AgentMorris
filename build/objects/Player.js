@@ -5,7 +5,7 @@ import { Collider } from "../engine/components/Collider.js";
 export class Player extends GameObject {
     constructor() {
         super();
-        this.addComponent(SpriteRenderer, new SpriteRenderer(this, {
+        this._spriteRenderer = new SpriteRenderer(this, {
             images: ["./Assets/images/AgentMorris_SpriteSheet.png"],
             frames: { width: 64, height: 64 },
             animations: {
@@ -13,7 +13,8 @@ export class Player extends GameObject {
                 walk: [2, 3, undefined, 0.2],
                 run: [2, 3, undefined, 0.4],
             }
-        }));
+        });
+        this.addComponent(SpriteRenderer, this._spriteRenderer);
         this.addComponent(Collider, new Collider(this, {
             tag: "player",
             width: 26,
@@ -24,7 +25,7 @@ export class Player extends GameObject {
         this._init();
     }
     _init() {
-        this.getComponent(SpriteRenderer).sprite.gotoAndPlay("idle");
+        this._spriteRenderer.sprite.gotoAndPlay("idle");
     }
 }
 //# sourceMappingURL=Player.js.map

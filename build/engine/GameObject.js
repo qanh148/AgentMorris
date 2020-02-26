@@ -27,6 +27,14 @@ export class GameObject {
         this.eventManager.invoke(EventName.GameObject_Update);
     }
     //#region Components
+    /**
+     * Adds specified component to this GameObject
+     *
+     * @template T
+     * @param {GameComponentType<T>} gameComponentType
+     * @param {T} component
+     * @memberof GameObject
+     */
     addComponent(gameComponentType, component) {
         if (this.hasComponent(gameComponentType)) {
             throw new Error("Already have component of type: " + gameComponentType.name);
@@ -35,6 +43,14 @@ export class GameObject {
             this.components.push(component);
         }
     }
+    /**
+     * Returns whether this GameObject has component of type gameComponentType
+     *
+     * @template T
+     * @param {GameComponentType<T>} gameComponentType
+     * @returns {boolean}
+     * @memberof GameObject
+     */
     hasComponent(gameComponentType) {
         let result = false;
         this.components.some(c => {
@@ -45,17 +61,22 @@ export class GameObject {
         });
         return result;
     }
+    /**
+     * Returns component of type gameComponentType if it exists. Otherwise returns undefined.
+     *
+     * @template T
+     * @param {GameComponentType<T>} gameComponentType
+     * @returns {(T | undefined)}
+     * @memberof GameObject
+     */
     getComponent(gameComponentType) {
-        let component;
+        let component = undefined;
         this.components.some(c => {
             if (c instanceof gameComponentType) {
                 component = c;
                 return;
             }
         });
-        if (component == undefined) {
-            throw new Error("Component " + gameComponentType.name + " not found");
-        }
         return component;
     }
 }

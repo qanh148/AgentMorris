@@ -1,7 +1,6 @@
 import { Player } from "./objects/Player.js";
 import { PlayerController } from "./controllers/PlayerController.js";
 import { Wall } from "./objects/Wall.js";
-import { SpriteRenderer } from "./engine/components/SpriteRenderer.js";
 
 class Game {
 	private canvas?: HTMLCanvasElement;
@@ -37,12 +36,16 @@ class Game {
 	}
 
 	main(): void {
+		if (this.stage == undefined) {
+			throw new Error("Stage is not defined");
+		}
+
 		const wall = new Wall();
 		wall.transform.position = { x: 200, y: 200 };
-		this.stage?.addChild(wall.getComponent(SpriteRenderer).sprite);
+		wall.init(this.stage);
 
 		this.player.transform.position = { x: 300, y: 200 };
-		this.stage?.addChild(this.player.getComponent(SpriteRenderer).sprite);
+		this.player.init(this.stage);
 
 		this.playerController.initWASD();
 

@@ -20,11 +20,13 @@ export class Mover extends GameComponent {
         this._collided = false;
         this._lastUncollidedPos = { x: 0, y: 0 };
         this.transform = gameObject.getComponent(Transform);
-        this.collider = gameObject.getComponent(Collider);
+        this.collider = gameObject.getComponent(Collider); // may be undefined
         // TODO: Predicted next AABB step model
         this.gameObject.eventManager.addListener(EventName.Mover_Moved, () => {
             // this.setPosition(this.parent.position);
-            this.collider.checkCollision();
+            if (this.collider != undefined) {
+                this.collider.checkCollision();
+            }
         });
         this.gameObject.eventManager.addListener(EventName.PlayerController_MoveStart, moveDirection => {
             this.moveStart(moveDirection);
