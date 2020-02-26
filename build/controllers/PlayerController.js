@@ -1,5 +1,6 @@
 import { KeyboardInput } from "./KeyboardInput.js";
 import { MoveDirection } from "../engine/components/Mover.js";
+import { EventName } from "../engine/components/EventName.js";
 export class PlayerController {
     constructor(player) {
         this._player = player;
@@ -15,11 +16,11 @@ export class PlayerController {
     GenKeyMap(direction) {
         return {
             down: () => {
-                this._player.eventManager.invoke("moveStart", direction);
+                this._player.eventManager.invoke(EventName.PlayerController_MoveStart, direction);
                 // this._player.moveStart(direction);
             },
             up: () => {
-                this._player.eventManager.invoke("moveStop", direction);
+                this._player.eventManager.invoke(EventName.PlayerController_MoveStop, direction);
                 // this._player.moveStop(direction);
             }
         };

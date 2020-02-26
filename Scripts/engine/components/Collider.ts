@@ -2,6 +2,7 @@ import { AABB } from "../interfaces/AABB.js";
 import { GameObject } from "../GameObject.js";
 import { GameComponent } from "../GameComponent.js";
 import { Point2D } from "../interfaces/Point2D.js";
+import { EventName } from "./EventName.js";
 
 export interface ColliderData {
 	tag: string;
@@ -73,7 +74,7 @@ export class Collider extends GameComponent {
 		const graphics = new createjs.Graphics().beginFill("#ff0000").drawRect(0, 0, 100, 100);
 		this._debugShape = new createjs.Shape(graphics);
 
-		this.gameObject.eventManager.addListener("TransformPositionUpdate", data => {
+		this.gameObject.eventManager.addListener(EventName.Transform_PositionChange, data => {
 			this._aabb.position = Object.assign({}, data);
 		});
 	}
@@ -116,8 +117,8 @@ export class Collider extends GameComponent {
 				if (Collider.AABB(this._aabb, otherCollider._aabb)) { // Has collision
 					if (!otherColliderWasColliding) { // Wasn't colliding before
 						// Send collision enter events
-						this.gameObject.eventManager.invoke("collisionEnter", otherCollider);
-						otherCollider.gameObject.eventManager.invoke("collisionEnter", this);
+						this.gameObject.eventManager.invoke(EventName.Collider_CollisionEnter, otherCollider);
+						otherCollider.gameObject.eventManager.invoke(EventName.Collider_CollisionEnter, this);
 
 						// Save to arrays
 						this.currentColliders.push(otherCollider);
@@ -126,8 +127,8 @@ export class Collider extends GameComponent {
 				} else { // No collision
 					if (otherColliderWasColliding) { // Was colliding before
 						// Send collision exut events
-						this.gameObject.eventManager.invoke("collisionExit", otherCollider);
-						otherCollider.gameObject.eventManager.invoke("collisionExit", this);
+						this.gameObject.eventManager.invoke(EventName.Collider_CollisionExit, otherCollider);
+						otherCollider.gameObject.eventManager.invoke(EventName.Collider_CollisionExit, this);
 
 						// Remove from arrays
 						this.currentColliders.splice(index, 1);

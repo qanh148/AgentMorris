@@ -1,5 +1,6 @@
 import { Transform } from "./components/Transform.js";
 import { EventManager } from "./components/EventManager.js";
+import { EventName } from "./components/EventName.js";
 export class GameObject {
     //#endregion
     constructor() {
@@ -19,7 +20,13 @@ export class GameObject {
     get eventManager() {
         return this._eventManager;
     }
-    //
+    init(stage) {
+        this.eventManager.invoke(EventName.GameObject_Init);
+    }
+    update() {
+        this.eventManager.invoke(EventName.GameObject_Update);
+    }
+    //#region Components
     addComponent(gameComponentType, component) {
         if (this.hasComponent(gameComponentType)) {
             throw new Error("Already have component of type: " + gameComponentType.name);

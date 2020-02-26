@@ -1,5 +1,7 @@
 import { GameComponent } from "../GameComponent.js";
+import { EventName } from "./EventName.js";
 export class SpriteRenderer extends GameComponent {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     constructor(gameObject, spriteSheetData) {
         super(gameObject);
         // https://www.createjs.com/docs/easeljs/classes/SpriteSheet.html
@@ -8,7 +10,7 @@ export class SpriteRenderer extends GameComponent {
         this.sprite.regX = 32;
         this.sprite.regY = 32;
         this._facingRight = true;
-        this.gameObject.eventManager.addListener("TransformPositionUpdate", data => {
+        this.gameObject.eventManager.addListener(EventName.Transform_PositionChange, data => {
             this.sprite.x = data.x;
             this.sprite.y = data.y;
         });

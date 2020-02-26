@@ -40,7 +40,7 @@ export class EventManager extends GameComponent {
             event = new Event();
         }
         event.addListener(listener);
-        this._events.set(name, event);
+        this._events.set(name, event); // TODO: Move this inside the if above
     }
     removeListener(name, listener) {
         const event = this._events.get(name);

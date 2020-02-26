@@ -29,7 +29,7 @@ export class Player extends GameObject {
 		this._init();
 	}
 
-	private _init() {
+	private _init(): void {
 		this.getComponent(SpriteRenderer).sprite.gotoAndPlay("idle");
 	}
 }

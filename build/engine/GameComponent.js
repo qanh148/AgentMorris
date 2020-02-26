@@ -8,6 +8,9 @@ export class GameComponent {
     get gameObject() {
         return this._gameObject;
     }
+    // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
+    init(stage) { }
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     update() { }
 }
 // Reference:

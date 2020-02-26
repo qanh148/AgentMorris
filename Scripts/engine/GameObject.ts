@@ -1,6 +1,7 @@
 import { GameComponent, GameComponentType } from "./GameComponent.js";
 import { Transform } from "./components/Transform.js";
 import { EventManager } from "./components/EventManager.js";
+import { EventName } from "./components/EventName.js";
 
 export abstract class GameObject {
 	private _components: GameComponent[];
@@ -34,7 +35,15 @@ export abstract class GameObject {
 		this.addComponent(EventManager, this._eventManager);
 	}
 
-	//
+	public init(stage: createjs.Stage) {
+		this.eventManager.invoke(EventName.GameObject_Init);
+	}
+
+	public update() {
+		this.eventManager.invoke(EventName.GameObject_Update);
+	}
+
+	//#region Components
 
 	public addComponent<T extends GameComponent>(gameComponentType: GameComponentType<T>, component: T): void {
 		if (this.hasComponent(gameComponentType)) {
@@ -73,6 +82,8 @@ export abstract class GameObject {
 
 		return component;
 	}
+
+	//#endregion
 }
 
 // Reference:

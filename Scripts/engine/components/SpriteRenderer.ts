@@ -1,5 +1,6 @@
 import { GameComponent } from "../GameComponent.js";
 import { GameObject } from "../GameObject.js";
+import { EventName } from "./EventName.js";
 
 export class SpriteRenderer extends GameComponent {
 	private _sprite: createjs.Sprite;
@@ -17,6 +18,7 @@ export class SpriteRenderer extends GameComponent {
 		this.sprite.scaleX = (value ? 1 : -1);
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	constructor(gameObject: GameObject, spriteSheetData: Record<string, any>) {
 		super(gameObject);
 
@@ -29,7 +31,7 @@ export class SpriteRenderer extends GameComponent {
 
 		this._facingRight = true;
 		
-		this.gameObject.eventManager.addListener("TransformPositionUpdate", data => {
+		this.gameObject.eventManager.addListener(EventName.Transform_PositionChange, data => {
 			this.sprite.x = data.x;
 			this.sprite.y = data.y;
 		});

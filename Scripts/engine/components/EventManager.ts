@@ -1,5 +1,6 @@
 import { GameObject } from "../GameObject.js";
 import { GameComponent } from "../GameComponent.js";
+import { EventName } from "./EventName.js";
 
 // Type instead of an interface
 // Previously tried interface instead of an abstract class
@@ -43,24 +44,24 @@ export class Event {
  * @class EventManager
  */
 export class EventManager extends GameComponent {
-	private _events: Map<string, Event>;
+	private _events: Map<EventName, Event>;
 
 	constructor(gameObject: GameObject) {
 		super(gameObject);
 		this._events = new Map();
 	}
 
-	public addListener(name: string, listener: Listener): void {
+	public addListener(name: EventName, listener: Listener): void {
 		let event = this._events.get(name);
 		if (event == undefined) {
 			event = new Event();
 		}
 
 		event.addListener(listener);
-		this._events.set(name, event);
+		this._events.set(name, event); // TODO: Move this inside the if above
 	}
 
-	public removeListener(name: string, listener: Listener): void {
+	public removeListener(name: EventName, listener: Listener): void {
 		const event = this._events.get(name)
 		if (event != undefined) {
 			event.removeListener(listener);
@@ -68,8 +69,9 @@ export class EventManager extends GameComponent {
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	public invoke(name: string, data: any = undefined): void {
+	public invoke(name: EventName, data: any = undefined): void {
 		const event = this._events.get(name)
+
 		if (event != undefined) {
 			event.invoke(data);
 		}
