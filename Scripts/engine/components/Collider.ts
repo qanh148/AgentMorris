@@ -2,6 +2,7 @@ import { AABB } from "../interfaces/AABB.js";
 import { GameObject } from "../GameObject.js";
 import { GameComponent } from "../GameComponent.js";
 import { Point2D } from "../interfaces/Point2D.js";
+import { EventName } from "./EventName.js";
 
 export interface ColliderData {
 	tag: string;
@@ -12,9 +13,6 @@ export interface ColliderData {
 
 export class Collider extends GameComponent {
 	//#region static vars
-
-	private static debugView = false;
-
 	private static colliders: Collider[];
 	private static _initialized = false;
 
@@ -70,11 +68,17 @@ export class Collider extends GameComponent {
 
 		Collider.colliders.push(this);
 
-		const graphics = new createjs.Graphics().beginFill("#ff0000").drawRect(0, 0, 100, 100);
+		const graphics = new createjs.Graphics().beginStroke("#ff0000").drawRect(0, 0, data.width, data.height);
 		this._debugShape = new createjs.Shape(graphics);
+		// TODO: Don't hard-code regXY values
+		this._debugShape.regX = 32;
+		this._debugShape.regY = 32;
+		this._debugShape.visible = false;
 
-		this.gameObject.eventManager.addListener("TransformPositionUpdate", data => {
-			this._aabb.position = Object.assign({}, data);
+		this.gameObject.container.addChild(this._debugShape);
+
+		this.gameObject.eventManager.addListener(EventName.Transform_PositionChange, position => {
+			this.setPosition(position as Point2D);
 		});
 	}
 
@@ -83,6 +87,9 @@ export class Collider extends GameComponent {
 
 		this._aabb.position.x += this._aabbOffset.x;
 		this._aabb.position.y += this._aabbOffset.y;
+
+		this._debugShape.x = this._aabb.position.x;
+		this._debugShape.y = this._aabb.position.y;
 	}
 
 	public delete(): void {
@@ -116,8 +123,8 @@ export class Collider extends GameComponent {
 				if (Collider.AABB(this._aabb, otherCollider._aabb)) { // Has collision
 					if (!otherColliderWasColliding) { // Wasn't colliding before
 						// Send collision enter events
-						this.gameObject.eventManager.invoke("collisionEnter", otherCollider);
-						otherCollider.gameObject.eventManager.invoke("collisionEnter", this);
+						this.gameObject.eventManager.invoke(EventName.Collider_CollisionEnter, otherCollider);
+						otherCollider.gameObject.eventManager.invoke(EventName.Collider_CollisionEnter, this);
 
 						// Save to arrays
 						this.currentColliders.push(otherCollider);
@@ -126,8 +133,8 @@ export class Collider extends GameComponent {
 				} else { // No collision
 					if (otherColliderWasColliding) { // Was colliding before
 						// Send collision exut events
-						this.gameObject.eventManager.invoke("collisionExit", otherCollider);
-						otherCollider.gameObject.eventManager.invoke("collisionExit", this);
+						this.gameObject.eventManager.invoke(EventName.Collider_CollisionExit, otherCollider);
+						otherCollider.gameObject.eventManager.invoke(EventName.Collider_CollisionExit, this);
 
 						// Remove from arrays
 						this.currentColliders.splice(index, 1);
@@ -155,9 +162,9 @@ export class Collider extends GameComponent {
 	}
 
 	public static toggleDebugView(toggle: boolean): void {
-		this.debugView = toggle;
-
-		this.colliders.forEach
+		this.colliders.forEach(collider => {
+			collider._debugShape.visible = toggle;
+		})
 	}
 
 	//#endregion

@@ -13,8 +13,12 @@ export abstract class GameComponent {
 	constructor(gameObject: GameObject) {
 		this._gameObject = gameObject;
 	}
+	
+	// eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
+	public init(stage: createjs.Stage): void {}
 
-	public update() {}
+	// eslint-disable-next-line @typescript-eslint/no-empty-function
+	public update(): void {}
 }
 
 export interface GameComponentType<T extends GameComponent> {

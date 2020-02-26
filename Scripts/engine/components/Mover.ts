@@ -2,17 +2,17 @@ import { GameComponent } from "../GameComponent.js";
 import { Point2D } from "../interfaces/Point2D.js";
 import { Collider } from "./Collider.js";
 import { GameObject } from "../GameObject.js";
-import { SpriteRenderer } from "./SpriteRenderer.js";
 import { Transform } from "./Transform.js";
+import { EventName } from "./EventName.js";
 
+// TODO: Const enum?
 export enum MoveDirection {
 	Up, Down, Left, Right
 }
 
 export class Mover extends GameComponent {
 	private transform: Transform;
-	private spriteRenderer: SpriteRenderer;
-	private collider: Collider;
+	private collider?: Collider;
 	
 	// Private
 	private _moveSpeed = 5;
@@ -25,40 +25,40 @@ export class Mover extends GameComponent {
 	constructor(gameObject: GameObject) {
 		super(gameObject);
 
-		this.transform = gameObject.getComponent(Transform);
-		this.spriteRenderer = gameObject.getComponent(SpriteRenderer);
-		this.collider = gameObject.getComponent(Collider);
+		this.transform = gameObject.getComponent(Transform) as Transform;
+		this.collider = gameObject.getComponent(Collider); // may be undefined
 
-		// TODO: Don't need to check collision every time you move,
-		// Rather, turn on a bool to check collision IF there was movement
-		// That check should be in a time based loop
-		// UPDATE: Nah, go with predicted next step model
-		// ALSO: Check collision before actually moving to avoid moving twice
-		// ALSO: Determine if there's a better way to prevent movement instead of this flag
+		// TODO: Predicted next AABB step model
 
-		this.gameObject.eventManager.addListener("moved", () => {
+		this.gameObject.eventManager.addListener(EventName.Mover_Moved, () => {
 			// this.setPosition(this.parent.position);
-			this.collider.checkCollision();
+			if (this.collider != undefined) {
+				this.collider.checkCollision();
+			}
 		});
 
-		this.gameObject.eventManager.addListener("moveStart", moveDirection => {
+		this.gameObject.eventManager.addListener(EventName.PlayerController_MoveStart, moveDirection => {
 			this.moveStart(moveDirection);
 		});
-		this.gameObject.eventManager.addListener("moveStop", moveDirection => {
+		this.gameObject.eventManager.addListener(EventName.PlayerController_MoveStop, moveDirection => {
 			this.moveStop(moveDirection);
 		});
 
-		this.gameObject.eventManager.addListener("collisionEnter", otherColliderAbstract => {
+		this.gameObject.eventManager.addListener(EventName.Collider_CollisionEnter, otherColliderAbstract => {
 			const otherCollider = otherColliderAbstract as Collider;
 			if (otherCollider.tag == "wall") {
 				this._collided = true;
 			}
 		});
-		this.gameObject.eventManager.addListener("collisionExit", otherColliderAbstract => {
+		this.gameObject.eventManager.addListener(EventName.Collider_CollisionExit, otherColliderAbstract => {
 			const otherCollider = otherColliderAbstract as Collider;
 			if (otherCollider.tag == "wall") {
 				this._collided = false;
 			}
+		});
+
+		this.gameObject.eventManager.addListener(EventName.GameObject_Update, () => {
+			this.update();
 		});
 	}
 
@@ -71,17 +71,17 @@ export class Mover extends GameComponent {
 				this._movingY = this._moveSpeed;
 				break;
 			case MoveDirection.Left:
-				this.spriteRenderer.facingRight = false;
+				this.gameObject.eventManager.invoke(EventName.Mover_Turned, {facingRight: false});
 				this._movingX = -this._moveSpeed;
 				break;
 			case MoveDirection.Right:
-				this.spriteRenderer.facingRight = true;
+				this.gameObject.eventManager.invoke(EventName.Mover_Turned, {facingRight: true});
 				this._movingX = this._moveSpeed;
 				break;
 		}
 
 		if (this._movingX != 0 || this._movingY != 0) {
-			this.spriteRenderer.sprite.gotoAndPlay("walk");
+			this.gameObject.eventManager.invoke(EventName.Mover_StartWalk);
 		}
 	}
 
@@ -92,17 +92,17 @@ export class Mover extends GameComponent {
 				this._movingY = 0;
 				break;
 			case MoveDirection.Left:
-				this.spriteRenderer.facingRight = false;
+				this.gameObject.eventManager.invoke(EventName.Mover_Turned, {facingRight: false});
 				this._movingX = 0;
 				break;
 			case MoveDirection.Right:
-				this.spriteRenderer.facingRight = true;
+				this.gameObject.eventManager.invoke(EventName.Mover_Turned, {facingRight: true});
 				this._movingX = 0;
 				break;
 		}
 
 		if (this._movingX == 0 && this._movingY == 0) {
-			this.spriteRenderer.sprite.gotoAndPlay("idle");
+			this.gameObject.eventManager.invoke(EventName.Mover_StopWalk);
 		}
 	}
 
@@ -130,7 +130,7 @@ export class Mover extends GameComponent {
 
 		// Set new pos, which also sets collision etc
 		this.transform.position = newPos;
-		this.gameObject.eventManager.invoke("moved");
+		this.gameObject.eventManager.invoke(EventName.Mover_Moved);
 
 		// Move back based on collision
 		if (this._collided) {

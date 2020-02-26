@@ -4,10 +4,12 @@ import { SpriteRenderer } from "../engine/components/SpriteRenderer.js";
 import { Collider } from "../engine/components/Collider.js";
 
 export class Player extends GameObject {
+	private _spriteRenderer: SpriteRenderer;
+
 	constructor() {
 		super();
 
-		this.addComponent(SpriteRenderer, new SpriteRenderer(this, {
+		this._spriteRenderer = new SpriteRenderer(this, {
 			images: ["./Assets/images/AgentMorris_SpriteSheet.png"],
 			frames: { width: 64, height: 64 },
 			animations: {
@@ -15,13 +17,15 @@ export class Player extends GameObject {
 				walk: [2, 3, undefined, 0.2],
 				run: [2, 3, undefined, 0.4],
 			}
-		}));
+		});
+
+		this.addComponent(SpriteRenderer, this._spriteRenderer);
 
 		this.addComponent(Collider, new Collider(this, {
 			tag: "player",
 			width: 26,
-			height: 32,
-			offset: { x: 16, y: 32 }
+			height: 28,
+			offset: { x: 19, y: 36 }
 		}));
 
 		this.addComponent(Mover, new Mover(this));
@@ -29,7 +33,7 @@ export class Player extends GameObject {
 		this._init();
 	}
 
-	private _init() {
-		this.getComponent(SpriteRenderer).sprite.gotoAndPlay("idle");
+	private _init(): void {
+		this._spriteRenderer.sprite.gotoAndPlay("idle");
 	}
 }

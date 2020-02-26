@@ -3,16 +3,20 @@ import { SpriteRenderer } from "../engine/components/SpriteRenderer.js";
 import { Collider } from "../engine/components/Collider.js";
 
 export class Wall extends GameObject {
+	private _spriteRenderer: SpriteRenderer;
+
 	constructor() {
 		super();
 
-		this.addComponent(SpriteRenderer, new SpriteRenderer(this, {
+		this._spriteRenderer = new SpriteRenderer(this, {
 			images: ["./Assets/images/default.png"],
 			frames: { width: 64, height: 64 },
 			animations: {
 				idle: 0
 			}
-		}));
+		});
+
+		this.addComponent(SpriteRenderer, this._spriteRenderer);
 
 		this.addComponent(Collider, new Collider(this, {
 			tag: "wall",
@@ -24,7 +28,7 @@ export class Wall extends GameObject {
 		this._init();
 	}
 
-	private _init() {
-		this.getComponent(SpriteRenderer).sprite.gotoAndPlay("idle");
+	private _init(): void {
+		this._spriteRenderer.sprite.gotoAndPlay("idle");
 	}
 }
