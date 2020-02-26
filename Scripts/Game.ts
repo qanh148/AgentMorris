@@ -20,7 +20,6 @@ class Game {
 	
 	start(): void {
 		this.canvas = document.getElementsByTagName('canvas')[0];
-
 		if (this.canvas == undefined) {
 			throw new Error("Canvas not found");
 		}
@@ -49,14 +48,15 @@ class Game {
 
 		this.playerController.initWASD();
 
-		// Collider.debugView = true;
-
-		// let playerCollider:Collider = new Collider("player");
-		// let otherCollider:Collider = new Collider("other");
+		// Collider.toggleDebugView(true);
 	}
 	
 	update(): void {
-		this.stage?.update();
+		if (this.stage == undefined) {
+			throw new Error("Stage is not defined");
+		}
+		
+		this.stage.update();
 		this.player.update();
 	}
 }

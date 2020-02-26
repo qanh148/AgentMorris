@@ -30,13 +30,13 @@ class Game {
         this.player.transform.position = { x: 300, y: 200 };
         this.player.init(this.stage);
         this.playerController.initWASD();
-        // Collider.debugView = true;
-        // let playerCollider:Collider = new Collider("player");
-        // let otherCollider:Collider = new Collider("other");
+        // Collider.toggleDebugView(true);
     }
     update() {
-        var _a;
-        (_a = this.stage) === null || _a === void 0 ? void 0 : _a.update();
+        if (this.stage == undefined) {
+            throw new Error("Stage is not defined");
+        }
+        this.stage.update();
         this.player.update();
     }
 }

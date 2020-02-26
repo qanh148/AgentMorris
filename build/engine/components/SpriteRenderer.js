@@ -7,6 +7,7 @@ export class SpriteRenderer extends GameComponent {
         // https://www.createjs.com/docs/easeljs/classes/SpriteSheet.html
         const spriteSheet = new createjs.SpriteSheet(spriteSheetData);
         this._sprite = new createjs.Sprite(spriteSheet);
+        // TODO: Don't hard-code regXY values
         this.sprite.regX = 32;
         this.sprite.regY = 32;
         this._facingRight = true;

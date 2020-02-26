@@ -16,8 +16,10 @@ export class Collider extends GameComponent {
         Collider.colliders.push(this);
         const graphics = new createjs.Graphics().beginStroke("#ff0000").drawRect(0, 0, data.width, data.height);
         this._debugShape = new createjs.Shape(graphics);
+        // TODO: Don't hard-code regXY values
         this._debugShape.regX = 32;
         this._debugShape.regY = 32;
+        this._debugShape.visible = false;
         this.gameObject.container.addChild(this._debugShape);
         // this.gameObject.eventManager.addListener(EventName.GameObject_Init, stage => {
         // 	(stage as createjs.Stage).addChild(this._debugShape);
@@ -104,12 +106,11 @@ export class Collider extends GameComponent {
         }
     }
     static toggleDebugView(toggle) {
-        this.debugView = toggle;
-        this.colliders.forEach;
+        this.colliders.forEach(collider => {
+            collider._debugShape.visible = toggle;
+        });
     }
 }
-//#region static vars
-Collider.debugView = false;
 Collider._initialized = false;
 Collider.initialize();
 //# sourceMappingURL=Collider.js.map

@@ -13,9 +13,6 @@ export interface ColliderData {
 
 export class Collider extends GameComponent {
 	//#region static vars
-
-	private static debugView = false;
-
 	private static colliders: Collider[];
 	private static _initialized = false;
 
@@ -76,11 +73,9 @@ export class Collider extends GameComponent {
 		// TODO: Don't hard-code regXY values
 		this._debugShape.regX = 32;
 		this._debugShape.regY = 32;
+		this._debugShape.visible = false;
 
 		this.gameObject.container.addChild(this._debugShape);
-		// this.gameObject.eventManager.addListener(EventName.GameObject_Init, stage => {
-		// 	(stage as createjs.Stage).addChild(this._debugShape);
-		// });
 
 		this.gameObject.eventManager.addListener(EventName.Transform_PositionChange, position => {
 			this.setPosition(position as Point2D);
@@ -167,9 +162,9 @@ export class Collider extends GameComponent {
 	}
 
 	public static toggleDebugView(toggle: boolean): void {
-		this.debugView = toggle;
-
-		this.colliders.forEach
+		this.colliders.forEach(collider => {
+			collider._debugShape.visible = toggle;
+		})
 	}
 
 	//#endregion
