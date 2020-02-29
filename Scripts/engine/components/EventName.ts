@@ -14,10 +14,11 @@ export enum EventName {
 	PlayerController_MoveStop,
 
 	// Collider
-	Collider_CollisionEnter,
-	Collider_CollisionExit,
+	Collider_Collided,
 	Collider_MoveRequestAccepted,
 	Collider_MoveRequestDenied,
+	Collider_TriggerEnter,
+	Collider_TriggerExit,
 
 	// Mover
 	Mover_RequestMove,

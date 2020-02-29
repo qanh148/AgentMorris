@@ -6,6 +6,7 @@ import { EventName } from "./EventName.js";
 
 export interface ColliderData {
 	tag: string;
+	isTrigger: boolean;
 	width: number;
 	height: number;
 	offset: Point2D;
@@ -25,6 +26,7 @@ export class Collider extends GameComponent {
 	//#region object vars
 
 	private _tag: string;
+	private _isTrigger: boolean;
 
 	private _aabb: AABB;
 	private _aabbOffset: Point2D;
@@ -33,11 +35,21 @@ export class Collider extends GameComponent {
 	private _requestedPos: Point2D;
 	private _requestedAABB: AABB;
 
+	private _currentTriggerOverlaps: Collider[];
+
 	private _debugShape: createjs.Shape;
 
 	//#endregion
 
 	//#region Property getters/setters
+
+	public get isTrigger(): boolean {
+		return this._isTrigger;
+	}
+
+	public set isTrigger(v: boolean) {
+		this._isTrigger = v;
+	}
 
 	public get tag(): string {
 		return this._tag;
@@ -54,6 +66,7 @@ export class Collider extends GameComponent {
 		super(gameObject);
 
 		this._tag = data.tag;
+		this._isTrigger = data.isTrigger;
 
 		this._aabb = {
 			position: { x: 0, y: 0 },
@@ -66,6 +79,8 @@ export class Collider extends GameComponent {
 		this._moveRequested = false;
 		this._requestedPos = { x: 0, y: 0 };
 		this._requestedAABB = Object.assign({}, this._aabb);
+
+		this._currentTriggerOverlaps = [];
 
 		const graphics = new createjs.Graphics().beginStroke("#ff0000").drawRect(0, 0, data.width, data.height);
 		this._debugShape = new createjs.Shape(graphics);
@@ -123,9 +138,9 @@ export class Collider extends GameComponent {
 		this._debugShape.x = this._aabb.position.x;
 		this._debugShape.y = this._aabb.position.y;
 	}
-	
+
 	private _attemptMoveRequest(): void {
-		let anyCollision = false;
+		let moveRestricted = false;
 
 		// For all colliders
 		for (let i = 0; i < Collider.colliders.length; i++) {
@@ -137,46 +152,98 @@ export class Collider extends GameComponent {
 				continue;
 			}
 
-			let otherColliderAABB: AABB;
-
-			// If move requested,
-			if (otherCollider._moveRequested) {
-				// Use other collider's requested aabb
-				otherColliderAABB = otherCollider._requestedAABB;
-			} else {
-				// Otherwise use other collider's original aabb
-				otherColliderAABB = otherCollider._aabb;
+			// If movement is already restricted by previous check,
+			if (moveRestricted) {
+				// and this new collider isn't a trigger,
+				if (!otherCollider.isTrigger) {
+					// Skip
+					continue;
+				}
 			}
+
+			// Get other collider's aabb
+			const otherColliderAABB = Collider.ResolveAABB(otherCollider);
 
 			// Check for collision
 			const hasCollision = Collider.AABB(this._requestedAABB, otherColliderAABB);
 
 			// If there is a collision
 			if (hasCollision) {
-				// Deny move request
-				anyCollision = true;
-				this.gameObject.eventManager.invoke(EventName.Collider_MoveRequestDenied, this._requestedPos);
-
-				// Call collision event
-				this.gameObject.eventManager.invoke(EventName.Collider_CollisionEnter, otherCollider);
-
-				// Cancel other collider's movement too
-				if (otherCollider._moveRequested) {
-					otherCollider._moveRequested = false;
+				// If both colliders are solid (non-triggers),
+				if (!this.isTrigger && !otherCollider.isTrigger) {
+					// Can't move
+					// If not already restricted by a previous collision, resovle and then restrict
+					if (!moveRestricted) {
+						this._resolveSolidCollision(otherCollider);
+						moveRestricted = true;
+					}
+				} else { // At least one of the colliders is a trigger
+					if (this.isTrigger) {
+						this._addTriggerOverlap(otherCollider);
+					}
+					
+					if (otherCollider.isTrigger) {
+						otherCollider._addTriggerOverlap(this);
+					}
 				}
-
-				// No need to check remaining colliders
-				// REMINDER: This might allow a glitch where you can avoid a collision (bullet) by triggering a different collision (wall)
-				break;
+			} else { // Not colliding
+				if (this.isTrigger) {
+					this._removeTriggerOverlap(otherCollider);
+				}
+				
+				if (otherCollider.isTrigger) {
+					otherCollider._removeTriggerOverlap(this);
+				}
 			}
 		} // end for all colliders
 
 		// If no collisions, accept movement request
-		if (!anyCollision) {
-			this.gameObject.eventManager.invoke(EventName.Collider_MoveRequestAccepted, this._requestedPos);
+		if (!moveRestricted) {
+			this._acceptMoveRequest();
 		}
 	}
-	
+
+	private _resolveSolidCollision(otherCollider: Collider): void {
+		// Deny move request
+		this._denyMoveRequest();
+		
+		// Deny other collider's movement too
+		if (otherCollider._moveRequested) {
+			otherCollider._denyMoveRequest();
+		}
+
+		// Call collision event
+		this.gameObject.eventManager.invoke(EventName.Collider_Collided, otherCollider);
+		otherCollider.gameObject.eventManager.invoke(EventName.Collider_Collided, this);
+	}
+
+	private _addTriggerOverlap(otherCollider: Collider): void {
+		const index = this._currentTriggerOverlaps.indexOf(otherCollider);
+
+		if (index == -1) {
+			this._currentTriggerOverlaps.push(otherCollider);
+			this.gameObject.eventManager.invoke(EventName.Collider_TriggerEnter, otherCollider);
+		}
+	}
+
+	private _removeTriggerOverlap(otherCollider: Collider): void {
+		const index = this._currentTriggerOverlaps.indexOf(otherCollider);
+
+		if (index != -1) {
+			this._currentTriggerOverlaps.splice(index, 1);
+			this.gameObject.eventManager.invoke(EventName.Collider_TriggerExit, otherCollider);
+		}
+	}
+
+	private _acceptMoveRequest(): void {
+		this.gameObject.eventManager.invoke(EventName.Collider_MoveRequestAccepted, this._requestedPos);
+	}
+
+	private _denyMoveRequest(): void {
+		this.gameObject.eventManager.invoke(EventName.Collider_MoveRequestDenied, this._requestedPos);
+		this._moveRequested = false;
+	}
+
 	private _setRequestedPosition(position: Point2D): void {
 		this._requestedAABB.position.x = position.x + this._aabbOffset.x;
 		this._requestedAABB.position.y = position.y + this._aabbOffset.y;
@@ -192,6 +259,21 @@ export class Collider extends GameComponent {
 			// Collider.timePerCheck = 1000 / Collider.checksPerSecond;
 			this._initialized = true;
 		}
+	}
+	
+	public static ResolveAABB(collider: Collider): AABB {
+		let aabb: AABB;
+
+		// If other collider also has a move requested,
+		if (collider._moveRequested) {
+			// Use other collider's requested aabb
+			aabb = collider._requestedAABB;
+		} else {
+			// Otherwise use other collider's original aabb
+			aabb = collider._aabb;
+		}
+
+		return aabb;
 	}
 
 	public static AABB(aabb1: AABB, aabb2: AABB): boolean {

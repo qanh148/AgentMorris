@@ -2,7 +2,7 @@ import { GameObject } from "../engine/GameObject.js";
 import { SpriteRenderer } from "../engine/components/SpriteRenderer.js";
 import { Collider } from "../engine/components/Collider.js";
 
-export class Wall extends GameObject {
+export class Sensor extends GameObject {
 	private _spriteRenderer: SpriteRenderer;
 
 	constructor() {
@@ -19,8 +19,8 @@ export class Wall extends GameObject {
 		this.addComponent(SpriteRenderer, this._spriteRenderer);
 
 		this.addComponent(Collider, new Collider(this, {
-			tag: "wall",
-			isTrigger: false,
+			tag: "sensor",
+			isTrigger: true,
 			width: 64,
 			height: 64,
 			offset: { x: 0, y: 0 }
