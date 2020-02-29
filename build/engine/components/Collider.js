@@ -21,9 +21,6 @@ export class Collider extends GameComponent {
         this._debugShape.regY = 32;
         this._debugShape.visible = false;
         this.gameObject.container.addChild(this._debugShape);
-        // this.gameObject.eventManager.addListener(EventName.GameObject_Init, stage => {
-        // 	(stage as createjs.Stage).addChild(this._debugShape);
-        // });
         this.gameObject.eventManager.addListener(EventName.Transform_PositionChange, position => {
             this.setPosition(position);
         });
