@@ -11,15 +11,16 @@ export var EventName;
     EventName[EventName["PlayerController_MoveStart"] = 4] = "PlayerController_MoveStart";
     EventName[EventName["PlayerController_MoveStop"] = 5] = "PlayerController_MoveStop";
     // Collider
-    EventName[EventName["Collider_CollisionEnter"] = 6] = "Collider_CollisionEnter";
-    EventName[EventName["Collider_CollisionExit"] = 7] = "Collider_CollisionExit";
-    EventName[EventName["Collider_MoveRequestAccepted"] = 8] = "Collider_MoveRequestAccepted";
-    EventName[EventName["Collider_MoveRequestDenied"] = 9] = "Collider_MoveRequestDenied";
+    EventName[EventName["Collider_Collided"] = 6] = "Collider_Collided";
+    EventName[EventName["Collider_MoveRequestAccepted"] = 7] = "Collider_MoveRequestAccepted";
+    EventName[EventName["Collider_MoveRequestDenied"] = 8] = "Collider_MoveRequestDenied";
+    EventName[EventName["Collider_TriggerEnter"] = 9] = "Collider_TriggerEnter";
+    EventName[EventName["Collider_TriggerExit"] = 10] = "Collider_TriggerExit";
     // Mover
-    EventName[EventName["Mover_RequestMove"] = 10] = "Mover_RequestMove";
-    EventName[EventName["Mover_Turned"] = 11] = "Mover_Turned";
-    EventName[EventName["Mover_StartWalk"] = 12] = "Mover_StartWalk";
-    EventName[EventName["Mover_StopWalk"] = 13] = "Mover_StopWalk";
+    EventName[EventName["Mover_RequestMove"] = 11] = "Mover_RequestMove";
+    EventName[EventName["Mover_Turned"] = 12] = "Mover_Turned";
+    EventName[EventName["Mover_StartWalk"] = 13] = "Mover_StartWalk";
+    EventName[EventName["Mover_StopWalk"] = 14] = "Mover_StopWalk";
     /* eslint-enable @typescript-eslint/camelcase */
 })(EventName || (EventName = {}));
 //# sourceMappingURL=EventName.js.map

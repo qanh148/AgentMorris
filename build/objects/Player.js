@@ -17,6 +17,7 @@ export class Player extends GameObject {
         this.addComponent(SpriteRenderer, this._spriteRenderer);
         this.addComponent(Collider, new Collider(this, {
             tag: "player",
+            isTrigger: false,
             width: 26,
             height: 28,
             offset: { x: 19, y: 36 }
