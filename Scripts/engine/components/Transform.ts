@@ -10,9 +10,9 @@ export class Transform extends GameComponent {
 		return this._position;
 	}
 
-	public set position(v: Point2D) {
-		this._position = Object.assign({}, v);
-		this.gameObject.eventManager.invoke(EventName.Transform_PositionChange, v);
+	public set position(position: Point2D) {
+		this._position = Object.assign({}, position);
+		this.gameObject.eventManager.invoke(EventName.Transform_PositionChange, position);
 	}
 
 	constructor(gameObject: GameObject) {

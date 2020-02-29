@@ -8,9 +8,9 @@ export class Transform extends GameComponent {
     get position() {
         return this._position;
     }
-    set position(v) {
-        this._position = Object.assign({}, v);
-        this.gameObject.eventManager.invoke(EventName.Transform_PositionChange, v);
+    set position(position) {
+        this._position = Object.assign({}, position);
+        this.gameObject.eventManager.invoke(EventName.Transform_PositionChange, position);
     }
 }
 //# sourceMappingURL=Transform.js.map

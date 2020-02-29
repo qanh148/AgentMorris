@@ -19,6 +19,9 @@ export abstract class GameComponent {
 
 	// eslint-disable-next-line @typescript-eslint/no-empty-function
 	public update(): void {}
+
+	// eslint-disable-next-line @typescript-eslint/no-empty-function
+	public destroy(): void {}
 }
 
 export interface GameComponentType<T extends GameComponent> {

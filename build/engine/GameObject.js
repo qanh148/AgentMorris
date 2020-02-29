@@ -31,6 +31,9 @@ export class GameObject {
     update() {
         this.eventManager.invoke(EventName.GameObject_Update);
     }
+    destroy() {
+        this.eventManager.invoke(EventName.GameObject_Destroy);
+    }
     //#region Components
     /**
      * Adds specified component to this GameObject

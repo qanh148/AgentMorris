@@ -52,6 +52,10 @@ export abstract class GameObject {
 		this.eventManager.invoke(EventName.GameObject_Update);
 	}
 
+	public destroy(): void {
+		this.eventManager.invoke(EventName.GameObject_Destroy);
+	}
+
 	//#region Components
 
 	/**

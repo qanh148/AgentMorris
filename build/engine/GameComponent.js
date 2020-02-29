@@ -12,6 +12,8 @@ export class GameComponent {
     init(stage) { }
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     update() { }
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    destroy() { }
 }
 // Reference:
 // https://www.html5gamedevs.com/topic/31386-component-based-architecture-in-typescript/?tab=comments#comment-180372
