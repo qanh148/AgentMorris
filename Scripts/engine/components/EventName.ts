@@ -4,6 +4,7 @@ export enum EventName {
 	// GameObject
 	GameObject_Init,
 	GameObject_Update,
+	GameObject_Destroy,
 
 	// Transform
 	Transform_PositionChange,
@@ -15,9 +16,11 @@ export enum EventName {
 	// Collider
 	Collider_CollisionEnter,
 	Collider_CollisionExit,
+	Collider_MoveRequestAccepted,
+	Collider_MoveRequestDenied,
 
 	// Mover
-	Mover_Moved,
+	Mover_RequestMove,
 	Mover_Turned,
 	Mover_StartWalk,
 	Mover_StopWalk,

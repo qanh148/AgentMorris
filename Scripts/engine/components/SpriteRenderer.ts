@@ -27,7 +27,7 @@ export class SpriteRenderer extends GameComponent {
 		const spriteSheet = new createjs.SpriteSheet(spriteSheetData);
 		this._sprite = new createjs.Sprite(spriteSheet);
 		
-		// TODO: Don't hard-code regXY values
+		// REMINDER: Don't hard-code regXY values
 		this.sprite.regX = 32;
 		this.sprite.regY = 32;
 

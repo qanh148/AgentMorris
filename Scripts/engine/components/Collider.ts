@@ -28,7 +28,10 @@ export class Collider extends GameComponent {
 
 	private _aabb: AABB;
 	private _aabbOffset: Point2D;
-	private _currentColliders: Collider[];
+
+	private _moveRequested: boolean;
+	private _requestedPos: Point2D;
+	private _requestedAABB: AABB;
 
 	private _debugShape: createjs.Shape;
 
@@ -41,10 +44,6 @@ export class Collider extends GameComponent {
 	}
 	public set tag(v: string) {
 		this._tag = v;
-	}
-
-	public get currentColliders(): Collider[] {
-		return this._currentColliders;
 	}
 
 	//#endregion
@@ -64,37 +63,123 @@ export class Collider extends GameComponent {
 
 		this._aabbOffset = Object.assign({}, data.offset);
 
-		this._currentColliders = [];
-
-		Collider.colliders.push(this);
+		this._moveRequested = false;
+		this._requestedPos = { x: 0, y: 0 };
+		this._requestedAABB = Object.assign({}, this._aabb);
 
 		const graphics = new createjs.Graphics().beginStroke("#ff0000").drawRect(0, 0, data.width, data.height);
 		this._debugShape = new createjs.Shape(graphics);
-		// TODO: Don't hard-code regXY values
+
+		// REMINDER: Don't hard-code regXY values
 		this._debugShape.regX = 32;
 		this._debugShape.regY = 32;
 		this._debugShape.visible = false;
 
 		this.gameObject.container.addChild(this._debugShape);
 
+		this._initEvents();
+
+		// Add to list of all colliders
+		Collider.colliders.push(this);
+	}
+
+	private _initEvents(): void {
+		this.gameObject.eventManager.addListener(EventName.GameObject_Update, () => {
+			this.update();
+		});
+
+		this.gameObject.eventManager.addListener(EventName.GameObject_Destroy, () => {
+			this.destroy();
+		});
+
 		this.gameObject.eventManager.addListener(EventName.Transform_PositionChange, position => {
 			this.setPosition(position as Point2D);
 		});
+
+		this.gameObject.eventManager.addListener(EventName.Mover_RequestMove, position => {
+			this._moveRequested = true;
+			this._requestedPos = position;
+			this._setRequestedPosition(position);
+		});
+	}
+
+	public update(): void {
+		if (this._moveRequested) {
+			this._attemptMoveRequest();
+			this._moveRequested = false;
+		}
+	}
+
+	public destroy(): void {
+		const index = Collider.colliders.indexOf(this);
+		Collider.colliders.splice(index, 1);
 	}
 
 	public setPosition(position: Point2D): void {
-		this._aabb.position = Object.assign({}, position);
-
-		this._aabb.position.x += this._aabbOffset.x;
-		this._aabb.position.y += this._aabbOffset.y;
+		// this._aabb.position = Object.assign({}, position);
+		this._aabb.position.x = position.x + this._aabbOffset.x;
+		this._aabb.position.y = position.y + this._aabbOffset.y;
 
 		this._debugShape.x = this._aabb.position.x;
 		this._debugShape.y = this._aabb.position.y;
 	}
+	
+	private _attemptMoveRequest(): void {
+		let anyCollision = false;
 
-	public delete(): void {
-		const index = Collider.colliders.indexOf(this);
-		Collider.colliders.splice(index, 1);
+		// For all colliders
+		for (let i = 0; i < Collider.colliders.length; i++) {
+			// Get collider
+			const otherCollider = Collider.colliders[i];
+
+			// Skip self
+			if (otherCollider == this) {
+				continue;
+			}
+
+			let otherColliderAABB: AABB;
+
+			// If move requested,
+			if (otherCollider._moveRequested) {
+				// Use other collider's requested aabb
+				otherColliderAABB = otherCollider._requestedAABB;
+			} else {
+				// Otherwise use other collider's original aabb
+				otherColliderAABB = otherCollider._aabb;
+			}
+
+			// Check for collision
+			const hasCollision = Collider.AABB(this._requestedAABB, otherColliderAABB);
+
+			// If there is a collision
+			if (hasCollision) {
+				// Deny move request
+				anyCollision = true;
+				this.gameObject.eventManager.invoke(EventName.Collider_MoveRequestDenied, this._requestedPos);
+
+				// Call collision event
+				this.gameObject.eventManager.invoke(EventName.Collider_CollisionEnter, otherCollider);
+
+				// Cancel other collider's movement too
+				if (otherCollider._moveRequested) {
+					otherCollider._moveRequested = false;
+				}
+
+				// No need to check remaining colliders
+				// REMINDER: This might allow a glitch where you can avoid a collision (bullet) by triggering a different collision (wall)
+				break;
+			}
+		} // end for all colliders
+
+		// If no collisions, accept movement request
+		if (!anyCollision) {
+			this.gameObject.eventManager.invoke(EventName.Collider_MoveRequestAccepted, this._requestedPos);
+		}
+	}
+	
+	private _setRequestedPosition(position: Point2D): void {
+		this._requestedAABB.position.x = position.x + this._aabbOffset.x;
+		this._requestedAABB.position.y = position.y + this._aabbOffset.y;
 	}
 
 	//#endregion
@@ -108,47 +193,6 @@ export class Collider extends GameComponent {
 			this._initialized = true;
 		}
 	}
-
-	// TODO: Make debug view for AABB
-	// var graphics = new createjs.Graphics().beginStroke("#ff0000").drawRect(0, 0, 100, 100);
-	// var shape = new createjs.Shape(graphics);
-
-	public checkCollision(): void {
-		Collider.colliders.forEach(otherCollider => { // For all colliders
-			if (this !== otherCollider) { // If not self
-				// Check if exists in currentColliders
-				const index = this.currentColliders.indexOf(otherCollider);
-				const otherColliderWasColliding = (index != -1);
-
-				if (Collider.AABB(this._aabb, otherCollider._aabb)) { // Has collision
-					if (!otherColliderWasColliding) { // Wasn't colliding before
-						// Send collision enter events
-						this.gameObject.eventManager.invoke(EventName.Collider_CollisionEnter, otherCollider);
-						otherCollider.gameObject.eventManager.invoke(EventName.Collider_CollisionEnter, this);
-
-						// Save to arrays
-						this.currentColliders.push(otherCollider);
-						otherCollider.currentColliders.push(this);
-					}
-				} else { // No collision
-					if (otherColliderWasColliding) { // Was colliding before
-						// Send collision exut events
-						this.gameObject.eventManager.invoke(EventName.Collider_CollisionExit, otherCollider);
-						otherCollider.gameObject.eventManager.invoke(EventName.Collider_CollisionExit, this);
-
-						// Remove from arrays
-						this.currentColliders.splice(index, 1);
-						const otherIndex = otherCollider.currentColliders.indexOf(this);
-						otherCollider.currentColliders.splice(otherIndex, 1);
-					}
-				}
-			}
-		});
-	}
-
-	// public predictCollision(): void {
-
-	// }
 
 	public static AABB(aabb1: AABB, aabb2: AABB): boolean {
 		if (aabb1.position.x < aabb2.position.x + aabb2.width &&
