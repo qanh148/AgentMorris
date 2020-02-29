@@ -70,7 +70,7 @@ export class Collider extends GameComponent {
 
 		const graphics = new createjs.Graphics().beginStroke("#ff0000").drawRect(0, 0, data.width, data.height);
 		this._debugShape = new createjs.Shape(graphics);
-		// REMINDER: Don't hard-code regXY values
+		// TODO: Don't hard-code regXY values
 		this._debugShape.regX = 32;
 		this._debugShape.regY = 32;
 		this._debugShape.visible = false;
@@ -108,6 +108,10 @@ export class Collider extends GameComponent {
 			this._initialized = true;
 		}
 	}
+
+	// TODO: Make debug view for AABB
+	// var graphics = new createjs.Graphics().beginStroke("#ff0000").drawRect(0, 0, 100, 100);
+	// var shape = new createjs.Shape(graphics);
 
 	public checkCollision(): void {
 		Collider.colliders.forEach(otherCollider => { // For all colliders

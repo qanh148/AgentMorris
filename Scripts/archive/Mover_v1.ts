@@ -5,6 +5,7 @@ import { GameObject } from "../GameObject.js";
 import { Transform } from "./Transform.js";
 import { EventName } from "./EventName.js";
 
+// TODO: Const enum?
 export enum MoveDirection {
 	Up, Down, Left, Right
 }
@@ -26,6 +27,8 @@ export class Mover extends GameComponent {
 
 		this.transform = gameObject.getComponent(Transform) as Transform;
 		this.collider = gameObject.getComponent(Collider); // may be undefined
+
+		// TODO: Predicted next AABB step model
 
 		this.gameObject.eventManager.addListener(EventName.Mover_Moved, () => {
 			// this.setPosition(this.parent.position);

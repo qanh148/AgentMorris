@@ -53,12 +53,13 @@ export class EventManager extends GameComponent {
 
 	public addListener(name: EventName, listener: Listener): void {
 		let event = this._events.get(name);
+
 		if (event == undefined) {
 			event = new Event();
+			this._events.set(name, event);
 		}
 
 		event.addListener(listener);
-		this._events.set(name, event); // TODO: Move this inside the if above
 	}
 
 	public removeListener(name: EventName, listener: Listener): void {
