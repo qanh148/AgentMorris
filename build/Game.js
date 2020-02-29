@@ -2,7 +2,6 @@ import { Player } from "./objects/Player.js";
 import { PlayerController } from "./controllers/PlayerController.js";
 import { Wall } from "./objects/Wall.js";
 import { Sensor } from "./objects/Sensor.js";
-import { EventName } from "./engine/components/EventName.js";
 class Game {
     constructor() {
         window.addEventListener("load", () => {
@@ -32,12 +31,6 @@ class Game {
         const sensor = new Sensor();
         sensor.transform.position = { x: 400, y: 200 };
         sensor.init(this.stage);
-        sensor.eventManager.addListener(EventName.Collider_TriggerEnter, collider => {
-            console.log(collider);
-        });
-        sensor.eventManager.addListener(EventName.Collider_TriggerExit, collider => {
-            console.log(collider);
-        });
         this.player.transform.position = { x: 300, y: 200 };
         this.player.init(this.stage);
         this.playerController.initWASD();

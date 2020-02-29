@@ -5,7 +5,7 @@ export class Wall extends GameObject {
     constructor() {
         super();
         this._spriteRenderer = new SpriteRenderer(this, {
-            images: ["./Assets/images/default.png"],
+            images: ["./Assets/images/wallPlaceholder.png"],
             frames: { width: 64, height: 64 },
             animations: {
                 idle: 0

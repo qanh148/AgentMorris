@@ -9,7 +9,7 @@ export class Sensor extends GameObject {
 		super();
 
 		this._spriteRenderer = new SpriteRenderer(this, {
-			images: ["./Assets/images/default.png"],
+			images: ["./Assets/images/sensorPlaceholder.png"],
 			frames: { width: 64, height: 64 },
 			animations: {
 				idle: 0
