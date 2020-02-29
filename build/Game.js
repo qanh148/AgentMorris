@@ -2,6 +2,8 @@ import { Player } from "./objects/Player.js";
 import { PlayerController } from "./controllers/PlayerController.js";
 import { Wall } from "./objects/Wall.js";
 import { Sensor } from "./objects/Sensor.js";
+import { EventName } from "./engine/components/EventName.js";
+import { Collider } from "./engine/components/Collider.js";
 class Game {
     constructor() {
         window.addEventListener("load", () => {
@@ -33,8 +35,29 @@ class Game {
         sensor.init(this.stage);
         this.player.transform.position = { x: 300, y: 200 };
         this.player.init(this.stage);
+        this.player.eventManager.addListener(EventName.Collider_Collided, collider => {
+            if (collider instanceof Collider) {
+                if (collider.tag == "wall") {
+                    console.log("Collided with wall");
+                }
+            }
+        });
+        sensor.eventManager.addListener(EventName.Collider_TriggerEnter, collider => {
+            if (collider instanceof Collider) {
+                if (collider.tag == "player") {
+                    console.log("Walked into sensor");
+                }
+            }
+        });
+        sensor.eventManager.addListener(EventName.Collider_TriggerExit, collider => {
+            if (collider instanceof Collider) {
+                if (collider.tag == "player") {
+                    console.log("Walked out of sensor");
+                }
+            }
+        });
         this.playerController.initWASD();
-        // Collider.toggleDebugView(true);
+        Collider.toggleDebugView(true);
     }
     update() {
         if (this.stage == undefined) {

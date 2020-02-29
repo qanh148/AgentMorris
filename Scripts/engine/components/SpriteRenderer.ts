@@ -34,9 +34,6 @@ export class SpriteRenderer extends GameComponent {
 		this._facingRight = true;
 
 		this.gameObject.container.addChild(this.sprite);
-		// this.gameObject.eventManager.addListener(EventName.GameObject_Init, stage => {
-		// 	(stage as createjs.Stage).addChild(this.sprite);
-		// });
 		
 		this.gameObject.eventManager.addListener(EventName.Transform_PositionChange, data => {
 			this.sprite.x = data.x;
